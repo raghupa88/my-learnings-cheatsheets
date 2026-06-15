@@ -1,0 +1,39 @@
+.glossary-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.glossary-item:last-child {
+  border-bottom: none;
+}
+
+.glossary-item__header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.glossary-item__term {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.glossary-item__category {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-secondary);
+  background: rgba(167, 139, 250, 0.12);
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+.glossary-item__definition {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+  margin: 0;
+}

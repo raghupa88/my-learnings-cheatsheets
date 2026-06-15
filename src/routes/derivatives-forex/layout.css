@@ -1,0 +1,135 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── Nav ── */
+.layout__nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.layout__nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: var(--nav-height);
+}
+
+/* Logo */
+.layout__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.layout__logo-icon {
+  font-size: 22px;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.layout__logo-text {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.layout__logo-sub {
+  font-weight: 400;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+/* Nav links */
+.layout__nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  flex: 1;
+}
+
+.layout__nav-link {
+  display: block;
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: all var(--transition);
+}
+
+.layout__nav-link:hover {
+  background: var(--color-surface-elevated);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.layout__nav-link--active {
+  background: var(--color-primary-dim);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.layout__nav-link--active:hover {
+  background: var(--color-primary-dim);
+  color: var(--color-primary);
+}
+
+/* Main content */
+.layout__main {
+  flex: 1;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* Footer */
+.layout__footer {
+  text-align: center;
+  padding: 20px 24px;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.78rem;
+  color: var(--color-text-dim);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.layout__route-indicator {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-text-dim);
+}
+
+@media (max-width: 640px) {
+  .layout__nav-inner {
+    padding: 0 16px;
+    gap: 12px;
+  }
+  .layout__logo-sub {
+    display: none;
+  }
+  .layout__nav-link {
+    padding: 5px 8px;
+    font-size: 0.82rem;
+  }
+  .layout__main {
+    padding: 20px 16px;
+  }
+}
