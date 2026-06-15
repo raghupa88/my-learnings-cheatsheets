@@ -1,0 +1,36 @@
+.formula-block {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-subtle);
+  border-left: 3px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin: 12px 0;
+}
+
+.formula-block__label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.formula-block__content {
+  overflow-x: auto;
+  padding: 4px 0;
+}
+
+.formula-block__error {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--color-error);
+}
+
+/* KaTeX display math centering */
+.formula-block .katex-display {
+  margin: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
