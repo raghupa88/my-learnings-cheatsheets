@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 export function useSearch<T>(
   items: T[],
@@ -13,7 +13,7 @@ export function useSearch<T>(
     return () => clearTimeout(timer);
   }, [query, debounceMs]);
 
-  const filtered = useCallback(() => {
+  const filtered = useMemo(() => {
     if (!debouncedQuery.trim()) return items;
     const q = debouncedQuery.toLowerCase();
     return items.filter(item =>
@@ -23,7 +23,7 @@ export function useSearch<T>(
         return String(val).toLowerCase().includes(q);
       })
     );
-  }, [items, keys, debouncedQuery])();
+  }, [items, keys, debouncedQuery]);
 
   return { query, setQuery, filtered };
 }
