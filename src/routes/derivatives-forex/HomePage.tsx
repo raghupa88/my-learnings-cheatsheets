@@ -42,7 +42,6 @@ export default function HomePage() {
   return (
     <div className="home">
       <section className="home__hero">
-        <div className="home__hero-badge">Principal Engineer Reference</div>
         <h1 className="home__hero-title">
           Derivatives &amp; Forex
           <br />
