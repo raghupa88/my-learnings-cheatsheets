@@ -1,0 +1,265 @@
+/* ── Grid layout ── */
+.cc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.cc-span-2 { grid-column: span 2; }
+.cc-span-3 { grid-column: span 3; }
+
+/* ── Section divider ── */
+.cc-section-label {
+  grid-column: span 3;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-text-dim);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.cc-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+/* ── Card ── */
+.cc-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.cc-card__header {
+  padding: 8px 14px;
+  background: var(--color-surface-elevated);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cc-card__icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.cc-card__title {
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.cc-card__body {
+  padding: 12px 14px;
+}
+
+.cc-card__body--flush {
+  padding: 0;
+}
+
+/* ── Tables ── */
+.cc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.cc-table th {
+  text-align: left;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-dim);
+  padding: 4px 10px 6px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cc-table td {
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  vertical-align: top;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.cc-table tr:last-child td {
+  border-bottom: none;
+}
+
+.cc-table tr:hover td {
+  background: var(--color-surface-elevated);
+}
+
+/* ── Inline code variants ── */
+.cc-code {
+  font-family: var(--font-mono);
+  background: var(--color-primary-dim);
+  color: var(--color-primary);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.72rem;
+}
+
+.cc-cmd  { color: var(--color-primary); font-weight: 600; font-family: var(--font-mono); font-size: 0.75rem; }
+.cc-flag { color: var(--color-warning); font-family: var(--font-mono); font-size: 0.75rem; }
+.cc-key  { color: var(--color-success); font-weight: 600; font-family: var(--font-mono); font-size: 0.75rem; }
+.cc-desc { color: var(--color-text-muted); font-size: 0.78rem; }
+.cc-env  { color: var(--color-warning); font-weight: 600; font-family: var(--font-mono); font-size: 0.72rem; }
+
+/* ── Install blocks ── */
+.cc-install-block {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.cc-install-block:last-child {
+  margin-bottom: 0;
+}
+
+.cc-install-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-dim);
+  margin-bottom: 4px;
+}
+
+.cc-install-block code {
+  font-family: var(--font-mono);
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  display: block;
+  white-space: pre;
+}
+
+/* ── Prefix rows ── */
+.cc-prefix-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-size: 0.78rem;
+}
+
+.cc-prefix-row:last-child { border-bottom: none; }
+
+.cc-prefix-sym {
+  font-size: 1.1rem;
+  font-weight: 700;
+  min-width: 20px;
+  line-height: 1;
+}
+
+.cc-sym-slash   { color: var(--color-secondary); }
+.cc-sym-bang    { color: var(--color-warning); }
+.cc-sym-at      { color: var(--color-primary); }
+.cc-sym-hash    { color: var(--color-text-muted); }
+.cc-sym-amp     { color: var(--color-success); }
+
+/* ── Mode rows ── */
+.cc-mode-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 80px;
+  gap: 8px;
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-size: 0.78rem;
+  align-items: center;
+}
+
+.cc-mode-row:last-child { border-bottom: none; }
+.cc-mode-name { font-weight: 600; color: var(--color-primary); font-family: var(--font-mono); font-size: 0.72rem; }
+.cc-mode-use  { font-size: 0.68rem; color: var(--color-text-dim); text-align: right; }
+
+/* ── Env rows ── */
+.cc-env-row {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 14px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-size: 0.78rem;
+  gap: 2px;
+}
+
+.cc-env-row:last-child { border-bottom: none; }
+.cc-env-desc { color: var(--color-text-dim); font-size: 0.7rem; }
+
+/* ── Config note ── */
+.cc-note {
+  padding: 10px 14px;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.7rem;
+  color: var(--color-text-dim);
+  line-height: 1.6;
+}
+
+/* ── Badge ── */
+.cc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  color: var(--color-success);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(52, 211, 153, 0.05);
+  font-family: var(--font-mono);
+}
+
+/* ── Multiline note ── */
+.cc-multiline {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border);
+}
+
+.cc-multiline-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-dim);
+  margin-bottom: 5px;
+}
+
+.cc-multiline-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Config priority column ── */
+.cc-priority {
+  color: var(--color-primary);
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 900px) {
+  .cc-grid { grid-template-columns: 1fr 1fr; }
+  .cc-span-2, .cc-span-3 { grid-column: span 2; }
+  .cc-section-label { grid-column: span 2; }
+}
+
+@media (max-width: 600px) {
+  .cc-grid { grid-template-columns: 1fr; }
+  .cc-span-2, .cc-span-3 { grid-column: span 1; }
+  .cc-section-label { grid-column: span 1; }
+  .cc-mode-row { grid-template-columns: 110px 1fr; }
+  .cc-mode-use { display: none; }
+}

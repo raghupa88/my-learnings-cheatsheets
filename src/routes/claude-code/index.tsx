@@ -1,17 +1,14 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import { ThemeToggle } from '../../components/ThemeToggle/ThemeToggle';
-import './layout.css';
+import '../../routes/derivatives-forex/layout.css';
 
 const NAV_LINKS = [
-  { to: '/derivatives-forex', label: 'Home', end: true },
-  { to: '/derivatives-forex/derivatives', label: 'Derivatives' },
-  { to: '/derivatives-forex/forex', label: 'Forex' },
-  { to: '/derivatives-forex/glossary', label: 'Glossary' },
-  { to: '/claude-code', label: 'Claude Code' },
+  { to: '/derivatives-forex', label: 'D&FX' },
+  { to: '/claude-code', label: 'Claude Code', end: true },
 ];
 
-export default function DerivativesForexLayout() {
+export default function ClaudeCodeLayout() {
   const [theme, toggleTheme] = useTheme();
   const location = useLocation();
 
@@ -19,9 +16,9 @@ export default function DerivativesForexLayout() {
     <div className="layout">
       <nav className="layout__nav">
         <div className="layout__nav-inner">
-          <NavLink to="/derivatives-forex" className="layout__logo" aria-label="Home">
+          <NavLink to="/claude-code" className="layout__logo" aria-label="Claude Code">
             <span className="layout__logo-icon">⬡</span>
-            <span className="layout__logo-text">D&amp;FX<span className="layout__logo-sub"> Cheatsheet</span></span>
+            <span className="layout__logo-text">Claude Code<span className="layout__logo-sub"> Cheatsheet</span></span>
           </NavLink>
 
           <ul className="layout__nav-links">
@@ -49,9 +46,9 @@ export default function DerivativesForexLayout() {
       </main>
 
       <footer className="layout__footer">
-        <p>Principal Engineer Reference · SCB Derivatives &amp; Forex · {new Date().getFullYear()}</p>
+        <p>Claude Code CLI Reference · {new Date().getFullYear()}</p>
         <p className="layout__footer-sub">
-          <span className={`layout__route-indicator`}>{location.pathname}</span>
+          <span className="layout__route-indicator">{location.pathname}</span>
         </p>
       </footer>
     </div>
