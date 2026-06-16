@@ -21,7 +21,7 @@ export default function GlossaryPage() {
   const grouped = useMemo(() => {
     const map: Record<string, typeof displayed> = {};
     for (const term of displayed) {
-      const letter = term.term[0].toUpperCase();
+      const letter = (term.term[0] ?? '#').toUpperCase();
       if (!map[letter]) map[letter] = [];
       map[letter].push(term);
     }

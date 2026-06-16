@@ -1,12 +1,18 @@
 import { Link } from 'react-router-dom';
+import { derivativesConcepts } from '../../data/derivatives';
+import { forexConcepts } from '../../data/forex';
+import { glossaryTerms } from '../../data/glossary';
 import './HomePage.css';
+
+const PAYOFF_DIAGRAM_COUNT = derivativesConcepts.filter(c => c.chartType).length
+  + forexConcepts.filter(c => c.chartType).length;
 
 const SECTIONS = [
   {
     to: '/derivatives-forex/derivatives',
     icon: '◈',
     title: 'Derivatives',
-    count: '15 concepts',
+    count: `${derivativesConcepts.length} concepts`,
     description:
       'Options, forwards, futures, swaps, credit derivatives, and the full Greeks suite. Black-Scholes, VaR, IRS, CDS.',
     color: 'blue',
@@ -15,7 +21,7 @@ const SECTIONS = [
     to: '/derivatives-forex/forex',
     icon: '⟳',
     title: 'Forex',
-    count: '12 concepts',
+    count: `${forexConcepts.length} concepts`,
     description:
       'Spot rates, forward rates, cross rates, FX options, interest rate parity, PPP, Garman-Kohlhagen, and FX Greeks.',
     color: 'purple',
@@ -24,7 +30,7 @@ const SECTIONS = [
     to: '/derivatives-forex/glossary',
     icon: '⊞',
     title: 'Glossary',
-    count: '50+ terms',
+    count: `${glossaryTerms.length}+ terms`,
     description:
       'Comprehensive A-Z reference: arbitrage to yield curve, covering all key terms for derivatives and FX trading.',
     color: 'green',
@@ -32,10 +38,10 @@ const SECTIONS = [
 ];
 
 const QUICK_STATS = [
-  { label: 'Derivatives Concepts', value: '15' },
-  { label: 'Forex Concepts', value: '12' },
-  { label: 'Glossary Terms', value: '50+' },
-  { label: 'Payoff Diagrams', value: '7' },
+  { label: 'Derivatives Concepts', value: String(derivativesConcepts.length) },
+  { label: 'Forex Concepts', value: String(forexConcepts.length) },
+  { label: 'Glossary Terms', value: `${glossaryTerms.length}+` },
+  { label: 'Payoff Diagrams', value: String(PAYOFF_DIAGRAM_COUNT) },
 ];
 
 export default function HomePage() {

@@ -77,7 +77,7 @@ export function PayoffChart({ type, strike = 100, premium = 5, forward = 100 }: 
     <div className="payoff-chart">
       <p className="payoff-chart__title">{CHART_LABELS[type]}</p>
       <ResponsiveContainer width="100%" height={200}>
-        <LineChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
+        <LineChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
           <XAxis
             dataKey="price"
