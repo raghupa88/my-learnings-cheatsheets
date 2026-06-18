@@ -6,6 +6,8 @@ import ForexPage from './routes/derivatives-forex/ForexPage';
 import GlossaryPage from './routes/derivatives-forex/GlossaryPage';
 import ClaudeCodeLayout from './routes/claude-code/index';
 import ClaudeCodePage from './routes/claude-code/ClaudeCodePage';
+import FxOptionsLayout from './routes/fx-options/index';
+import FxOptionsPage from './routes/fx-options/FxOptionsPage';
 
 export default function App() {
   return (
@@ -17,6 +19,9 @@ export default function App() {
           <Route path="derivatives" element={<DerivativesPage />} />
           <Route path="forex" element={<ForexPage />} />
           <Route path="glossary" element={<GlossaryPage />} />
+        </Route>
+        <Route path="/fx-options" element={<FxOptionsLayout />}>
+          <Route index element={<FxOptionsPage />} />
         </Route>
         <Route path="/claude-code" element={<ClaudeCodeLayout />}>
           <Route index element={<ClaudeCodePage />} />
