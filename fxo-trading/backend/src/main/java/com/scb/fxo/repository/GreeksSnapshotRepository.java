@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface GreeksSnapshotRepository extends JpaRepository<GreeksSnapshot, String> {
     List<GreeksSnapshot> findByTradeIdOrderByTimestampDesc(String tradeId);
+    java.util.Optional<GreeksSnapshot> findTopByTradeIdOrderByTimestampDesc(String tradeId);
+    List<GreeksSnapshot> findTop20ByTradeIdOrderByTimestampAsc(String tradeId);
 }
