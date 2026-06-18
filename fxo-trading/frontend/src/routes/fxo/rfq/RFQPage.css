@@ -1,0 +1,26 @@
+.rfq-page__title { font-size: 22px; font-weight: 700; margin-bottom: 24px; }
+.rfq-page__layout { display: grid; grid-template-columns: 300px 1fr; gap: 24px; }
+.rfq-page__form {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: 24px;
+  display: flex; flex-direction: column; gap: 16px; align-self: start;
+}
+.rfq-page__form h3 { font-size: 14px; font-weight: 600; }
+.rfq-page__form label { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--color-text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+.rfq-page__submit {
+  background: var(--color-primary); color: #fff; border: none;
+  border-radius: var(--radius); padding: 10px; font-size: 14px; font-weight: 600;
+  transition: background 0.15s;
+}
+.rfq-page__submit:hover:not(:disabled) { background: var(--color-primary-hover); }
+.rfq-page__submit:disabled { opacity: 0.6; }
+.rfq-page__blotter { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 24px; }
+.rfq-page__blotter h3 { font-size: 14px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.rfq-page__count { background: var(--color-surface-2); color: var(--color-text-muted); padding: 1px 6px; border-radius: 10px; font-size: 11px; }
+.rfq-page__table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.rfq-page__table th { text-align: left; padding: 8px 10px; background: var(--color-surface-2); color: var(--color-text-muted); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--color-border); }
+.rfq-page__table td { padding: 8px 10px; border-bottom: 1px solid var(--color-border); }
+.rfq-page__id { font-family: monospace; color: var(--color-text-muted); }
+.rfq-page__rate { font-family: monospace; font-weight: 600; color: var(--color-success); }
+.rfq-page__empty { text-align: center; color: var(--color-text-muted); padding: 32px 0; }
+@media (max-width: 768px) { .rfq-page__layout { grid-template-columns: 1fr; } }

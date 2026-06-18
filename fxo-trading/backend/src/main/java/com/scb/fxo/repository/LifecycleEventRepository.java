@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface LifecycleEventRepository extends JpaRepository<LifecycleEvent, String> {
     List<LifecycleEvent> findByTradeId(String tradeId);
+    List<LifecycleEvent> findByTradeIdOrderByTimestampDesc(String tradeId);
 }

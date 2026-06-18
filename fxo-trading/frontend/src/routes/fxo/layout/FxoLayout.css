@@ -1,0 +1,38 @@
+.fxo-layout { min-height: 100vh; display: flex; flex-direction: column; }
+.fxo-layout__nav {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow);
+  position: sticky; top: 0; z-index: 100;
+}
+.fxo-layout__nav-inner {
+  max-width: 1400px; margin: 0 auto;
+  padding: 0 24px;
+  display: flex; align-items: center; gap: 32px; height: 52px;
+}
+.fxo-layout__logo { font-weight: 700; font-size: 16px; color: var(--color-primary); white-space: nowrap; }
+.fxo-layout__nav-links { list-style: none; display: flex; gap: 4px; flex: 1; }
+.fxo-layout__nav-link {
+  display: block; padding: 6px 12px; border-radius: var(--radius);
+  color: var(--color-text-muted); font-size: 13px; font-weight: 500;
+  transition: color 0.15s, background 0.15s;
+}
+.fxo-layout__nav-link:hover { color: var(--color-text); background: var(--color-surface-2); }
+.fxo-layout__nav-link--active { color: var(--color-primary); background: rgba(79,156,249,0.1); }
+.fxo-layout__user { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.fxo-layout__user-name { font-size: 13px; color: var(--color-text); }
+.fxo-layout__role {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 4px; letter-spacing: 0.05em;
+}
+.fxo-layout__role--sales       { background: rgba(79,156,249,0.15); color: var(--color-primary); }
+.fxo-layout__role--trader      { background: rgba(76,175,130,0.15); color: var(--color-success); }
+.fxo-layout__role--operations  { background: rgba(245,166,35,0.15); color: var(--color-warning); }
+.fxo-layout__role--risk        { background: rgba(224,92,92,0.15);  color: var(--color-danger); }
+.fxo-layout__logout {
+  background: transparent; border: 1px solid var(--color-border);
+  color: var(--color-text-muted); padding: 4px 10px; border-radius: var(--radius);
+  font-size: 12px; transition: all 0.15s;
+}
+.fxo-layout__logout:hover { border-color: var(--color-danger); color: var(--color-danger); }
+.fxo-layout__main { flex: 1; max-width: 1400px; margin: 0 auto; padding: 24px; width: 100%; }
