@@ -1,0 +1,16 @@
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.status-badge--active    { background: rgba(79,156,249,0.15); color: var(--color-primary); }
+.status-badge--confirmed { background: rgba(76,175,130,0.15); color: var(--color-success); }
+.status-badge--settled   { background: rgba(139,143,168,0.15); color: var(--color-text-muted); }
+.status-badge--expired   { background: rgba(245,166,35,0.15); color: var(--color-warning); }
+.status-badge--pending   { background: rgba(245,166,35,0.15); color: var(--color-warning); }
+.status-badge--quoted    { background: rgba(155,127,232,0.15); color: var(--color-purple); }
+.status-badge--booked    { background: rgba(76,175,130,0.15); color: var(--color-success); }

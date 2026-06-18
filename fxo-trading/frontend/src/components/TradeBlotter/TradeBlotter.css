@@ -1,0 +1,15 @@
+.blotter { overflow-x: auto; }
+.blotter__empty { color: var(--color-text-muted); padding: 24px 0; text-align: center; }
+.blotter__table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.blotter__table th {
+  text-align: left; padding: 8px 12px;
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-weight: 600; font-size: 11px; text-transform: uppercase;
+  border-bottom: 1px solid var(--color-border);
+}
+.blotter__table td { padding: 8px 12px; border-bottom: 1px solid var(--color-border); }
+.blotter__row:nth-child(even) td { background: var(--color-surface-2); }
+.blotter__row--clickable:hover td { background: rgba(79,156,249,0.07); cursor: pointer; }
+.blotter__row--selected td { background: rgba(79,156,249,0.12) !important; }
+.blotter__id { font-family: monospace; color: var(--color-text-muted); }
