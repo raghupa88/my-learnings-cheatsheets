@@ -10,6 +10,8 @@
     "dev:cheatsheet": "npm run dev --workspace=cheatsheet",
     "build:cheatsheet": "npm run build --workspace=cheatsheet",
     "dev:fxo": "npm run dev --workspace=fxo-trading/frontend",
-    "build:fxo": "npm run build --workspace=fxo-trading/frontend"
+    "build:fxo": "npm run build --workspace=fxo-trading/frontend",
+    "build": "npm run build:cheatsheet",
+    "lint": "npm run lint --workspace=cheatsheet"
   }
 }
