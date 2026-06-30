@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FXO Learning Terminal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg:       #07090f;
+  --panel:    #0d1220;
+  --surface:  #131c30;
+  --surface2: #1a2540;
+  --border:   #233252;
+  --gold:     #f0a800;
+  --gold-dim: #7a5200;
+  --green:    #22d46a;
+  --red:      #f04860;
+  --blue:     #4a9eff;
+  --cyan:     #00d4ff;
+  --purple:   #c084fc;
+  --text:     #c8d8f0;
+  --dim:      #6080a8;
+  --muted:    #28384e;
+  --mono:     'JetBrains Mono', monospace;
+  --sans:     'Inter', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;min-height:100vh}
+
+/* ── HEADER ── */
+.hdr{
+  background:var(--panel);border-bottom:2px solid var(--gold);
+  padding:12px 20px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:99;
+}
+.hdr-brand{font-family:var(--mono);font-size:15px;color:var(--gold);font-weight:700;letter-spacing:2px}
+.hdr-sub{font-size:10px;color:var(--dim);letter-spacing:1.5px;margin-top:2px}
+.live-bar{display:flex;gap:18px}
+.live-item{font-family:var(--mono);font-size:10px;color:var(--dim);display:flex;align-items:center;gap:5px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── TABS ── */
+.tabs{
+  background:var(--panel);border-bottom:1px solid var(--border);
+  display:flex;overflow-x:auto;padding:0 16px;gap:2px;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  padding:10px 16px;cursor:pointer;font-family:var(--mono);
+  font-size:10px;color:var(--dim);letter-spacing:1px;
+  border-bottom:2px solid transparent;white-space:nowrap;
+  transition:color .15s,border-color .15s;user-select:none;
+}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ── SECTIONS ── */
+.content{padding:20px;max-width:1200px;margin:0 auto}
+.sec{display:none}
+.sec.active{display:block}
+.sec-head{font-family:var(--mono);font-size:17px;color:var(--gold);margin-bottom:4px;letter-spacing:1px}
+.sec-desc{font-size:12px;color:var(--dim);margin-bottom:20px;line-height:1.7;max-width:820px}
+
+/* ── CARDS ── */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:3px;padding:18px;margin-bottom:14px}
+.card-title{
+  font-family:var(--mono);font-size:10px;color:var(--gold);
+  letter-spacing:2px;margin-bottom:14px;text-transform:uppercase;
+}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:760px){.g2,.g3{grid-template-columns:1fr}}
+
+/* ── TABLES ── */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{
+  background:var(--surface2);color:var(--gold);
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;
+  text-align:left;padding:9px 11px;border-bottom:1px solid var(--border);
+}
+.tbl td{padding:9px 11px;border-bottom:1px solid var(--muted);vertical-align:top;line-height:1.5}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--surface)}
+.tbl td:first-child{font-family:var(--mono);font-size:11px;color:var(--cyan);white-space:nowrap}
+.mono{font-family:var(--mono);color:var(--gold);font-size:11px}
+
+/* ── TAGS ── */
+.tag{display:inline-block;padding:2px 7px;border-radius:2px;font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.8px}
+.tg{background:#0d1400;border:1px solid var(--gold-dim);color:var(--gold)}
+.tb{background:#061228;border:1px solid #1e4090;color:var(--blue)}
+.tc{background:#041214;border:1px solid #006080;color:var(--cyan)}
+.tg2{background:#031010;border:1px solid #145030;color:var(--green)}
+.tr{background:#120508;border:1px solid #602030;color:var(--red)}
+
+/* ── FORMULA BLOCKS ── */
+.fx{
+  background:var(--surface);border-left:3px solid var(--gold);
+  padding:13px 15px;font-family:var(--mono);font-size:12px;
+  border-radius:0 3px 3px 0;margin:10px 0;line-height:1.7;color:var(--cyan);
+}
+.fx-lbl{font-size:9.5px;color:var(--gold);letter-spacing:1.5px;margin-bottom:6px}
+
+/* ── FLOW ── */
+.flow{display:flex;overflow-x:auto;padding-bottom:6px;gap:0;align-items:stretch;margin-bottom:8px}
+.flow-step{flex:0 0 145px;position:relative;padding-right:24px}
+.flow-step::after{
+  content:'→';position:absolute;right:3px;top:50%;transform:translateY(-50%);
+  color:var(--gold);font-size:16px;font-weight:bold;
+}
+.flow-step:last-child::after{display:none}
+.flow-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:3px;padding:10px 9px;height:100%;
+}
+.flow-box.hl{border-color:var(--gold)}
+.flow-actor{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:1px;margin-bottom:4px}
+.flow-action{font-size:11px;color:var(--text);font-weight:500;margin-bottom:4px}
+.flow-note{font-size:10px;color:var(--dim);font-family:var(--mono)}
+
+/* ── GREEKS GRID ── */
+.ggrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:600px){.ggrid{grid-template-columns:repeat(3,1fr)}}
+.gcrd{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:3px;padding:14px;text-align:center;
+}
+.gsym{font-size:30px;color:var(--gold);line-height:1;margin-bottom:7px}
+.gname{font-family:var(--mono);font-size:9.5px;color:var(--cyan);letter-spacing:1.2px;margin-bottom:5px}
+.gdef{font-size:11px;color:var(--dim);line-height:1.45}
+.gval{font-family:var(--mono);font-size:10px;color:var(--green);margin-top:7px;line-height:1.4}
+
+/* ── STRATEGY CARDS ── */
+.scrd{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:3px;padding:14px;margin-bottom:10px;
+}
+.scrd-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.scrd-name{font-family:var(--mono);font-size:12.5px;color:var(--gold);font-weight:700}
+.scrd-body{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:600px){.scrd-body{grid-template-columns:1fr 1fr}}
+.sf-lbl{font-size:9.5px;color:var(--dim);margin-bottom:3px;font-family:var(--mono);letter-spacing:.5px}
+.sf-val{font-size:11.5px;color:var(--text);line-height:1.45}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:9.5px;font-family:var(--mono);font-weight:600;letter-spacing:.5px}
+.bull{background:#031210;color:var(--green);border:1px solid #145030}
+.bear{background:#120508;color:var(--red);border:1px solid #602030}
+.neut{background:#060c20;color:var(--blue);border:1px solid #1e4090}
+.vol{background:#0a0514;color:var(--purple);border:1px solid #5020a0}
+
+/* ── PARAM LIST ── */
+.prow{display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--muted)}
+.prow:last-child{border-bottom:none}
+.pk{font-family:var(--mono);font-size:11px;color:var(--cyan);min-width:155px;flex-shrink:0}
+.pv{flex:1;font-size:12px;color:var(--text);line-height:1.55}
+
+/* ── SECTION DIVIDER ── */
+.sdiv{
+  font-family:var(--mono);font-size:9.5px;color:var(--dim);
+  letter-spacing:2px;margin:22px 0 10px;text-transform:uppercase;
+  display:flex;align-items:center;gap:12px;
+}
+.sdiv::after{content:'';flex:1;height:1px;background:var(--muted)}
+
+/* ── VOL TABLE ── */
+.vol-band{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:14px}
+.vb-cell{background:var(--surface);border:1px solid var(--border);padding:10px;border-radius:3px;text-align:center}
+.vb-delta{font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:4px}
+.vb-vol{font-family:var(--mono);font-size:14px;color:var(--gold);font-weight:700}
+.vb-type{font-size:10px;color:var(--dim);margin-top:3px}
+
+/* ── SCROLL ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <div class="hdr-brand">FXO LEARNING TERMINAL</div>
+    <div class="hdr-sub">FX OPTIONS · SALES &amp; TRADER WORKFLOW · PRICING · STRATEGIES · BOOKING</div>
+  </div>
+  <div class="live-bar">
+    <div class="live-item"><div class="dot"></div>EUR/USD 1.0842</div>
+    <div class="live-item"><div class="dot"></div>OTC MARKETS</div>
+    <div class="live-item"><div class="dot"></div>1M ATM VOL 6.85%</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="show('flow',this)">01 · TRADE FLOW</div>
+  <div class="tab" onclick="show('rfq',this)">02 · RFQ PARAMETERS</div>
+  <div class="tab" onclick="show('pricing',this)">03 · PRICING ENGINE</div>
+  <div class="tab" onclick="show('strategies',this)">04 · STRATEGIES</div>
+  <div class="tab" onclick="show('hedging',this)">05 · HEDGING</div>
+  <div class="tab" onclick="show('booking',this)">06 · TRADE BOOKING</div>
+</div>
+
+<div class="content">
+
+<!-- ════════════════ TAB 1: TRADE FLOW ════════════════ -->
+<div id="flow" class="sec active">
+  <div class="sec-head">End-to-End FXO Trade Lifecycle</div>
+  <div class="sec-desc">How an FX Option moves from a client request to cash settlement — who acts at each stage, and which system captures it.</div>
+
+  <div class="card">
+    <div class="card-title">WORKFLOW — CLIENT INQUIRY → SETTLEMENT</div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-box">
+          <div class="flow-actor">CLIENT</div>
+          <div class="flow-action">Submits Request</div>
+          <div class="flow-note">CCY pair · notional<br>expiry · strategy need</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-box hl">
+          <div class="flow-actor">SALES</div>
+          <div class="flow-action">Creates RFQ</div>
+          <div class="flow-note">Enters all params<br>into pricing system</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-box hl">
+          <div class="flow-actor">TRADER</div>
+          <div class="flow-action">Prices Option</div>
+          <div class="flow-note">Vol surface · G-K<br>Greeks · Bid/Ask</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-box">
+          <div class="flow-actor">SALES</div>
+          <div class="flow-action">Quotes Client</div>
+          <div class="flow-note">Mid + sales spread<br>Client accepts / rejects</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-box">
+          <div class="flow-actor">FRONT OFFICE</div>
+          <div class="flow-action">Books Trade</div>
+          <div class="flow-note">Murex / Calypso<br>Trade ID assigned</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-box">
+          <div class="flow-actor">MIDDLE OFFICE</div>
+          <div class="flow-action">Confirmation</div>
+          <div class="flow-note">SWIFT MT300<br>Counterparty matches</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-box">
+          <div class="flow-actor">BACK OFFICE</div>
+          <div class="flow-action">Settlement</div>
+          <div class="flow-note">Premium payment<br>Delivery on exercise</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">SALES — ROLE DEEP DIVE</div>
+      <div class="prow"><div class="pk">Client Intake</div><div class="pv">Understand the client's FX exposure (e.g., a USD receivable in 3 months), hedge objective, risk tolerance, and premium budget.</div></div>
+      <div class="prow"><div class="pk">Structure Design</div><div class="pv">Recommend appropriate strategy — vanilla, collar, seagull, risk reversal — based on budget and market view. Often iterative.</div></div>
+      <div class="prow"><div class="pk">RFQ Submission</div><div class="pv">Enter all deal terms into Bloomberg OVML, ION Totem, Refinitiv Eikon, or internal platform. Send RFQ to trader's desk.</div></div>
+      <div class="prow"><div class="pk">Client Quote</div><div class="pv">Add sales spread (3–15 bps typical for vanilla) to trader's mid-price. Quote in %, pips, or CCY amount — whatever client understands.</div></div>
+      <div class="prow"><div class="pk">Execution</div><div class="pv">Verbal "done" captured on recorded line. Pass to operations for booking. Send deal term sheet to client for acknowledgement.</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">TRADER — ROLE DEEP DIVE</div>
+      <div class="prow"><div class="pk">Vol Surface Check</div><div class="pv">Pull live vol surface for the currency pair. Check ATM, 25D Risk Reversal, 25D Butterfly for the relevant tenor.</div></div>
+      <div class="prow"><div class="pk">Model Pricing</div><div class="pv">Run Garman-Kohlhagen for vanilla; local vol or stochastic vol (Heston, SABR) for exotics. Output: premium + Greeks.</div></div>
+      <div class="prow"><div class="pk">Book Risk Check</div><div class="pv">Assess how this new trade affects aggregate book delta, gamma, vega, theta. Does it offset existing risk or add to it?</div></div>
+      <div class="prow"><div class="pk">Bid/Ask Spread</div><div class="pv">Widen around mid based on liquidity, tenor, size, and exotic complexity. Vanilla 1M = 2–5 vega points; exotic = much wider.</div></div>
+      <div class="prow"><div class="pk">Delta Hedge</div><div class="pv">Execute spot/forward hedge immediately after booking to neutralize delta. Re-hedge dynamically as spot moves (gamma cost).</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">SYSTEMS MAP — WHO USES WHAT</div>
+    <table class="tbl">
+      <tr><th>SYSTEM</th><th>LAYER</th><th>FUNCTION</th><th>EXAMPLES</th></tr>
+      <tr><td>Pricing / RFQ Platform</td><td><span class="tag tg">FRONT OFFICE</span></td><td>Real-time vol surface, G-K pricing, Greeks, multi-leg structuring, RFQ workflow management</td><td>Bloomberg OVML, SuperDerivatives, ION Totem, Refinitiv</td></tr>
+      <tr><td>Trade Capture System</td><td><span class="tag tg">FRONT OFFICE</span></td><td>Book OTC derivatives, live P&amp;L, position management, limit monitoring</td><td>Murex MX.3, Calypso, Finastra Summit</td></tr>
+      <tr><td>Risk Engine</td><td><span class="tag tb">MIDDLE OFFICE</span></td><td>Real-time Greeks aggregation by book, VaR, stress tests, regulatory capital</td><td>Murex, Numerix, OpenGamma, Imagine</td></tr>
+      <tr><td>Confirmation Platform</td><td><span class="tag tb">MIDDLE OFFICE</span></td><td>Legal trade matching with counterparty, automated confirmation via ISDA terms</td><td>MarkitSERV, Traiana, SWIFT MT300</td></tr>
+      <tr><td>Settlement System</td><td><span class="tag tc">BACK OFFICE</span></td><td>Premium payment, FX delivery on exercise, nostro reconciliation, break resolution</td><td>Murex BO, TLM (Broadridge), Bottomline</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════ TAB 2: RFQ PARAMETERS ════════════════ -->
+<div id="rfq" class="sec">
+  <div class="sec-head">RFQ Parameters</div>
+  <div class="sec-desc">Every field Sales must provide when requesting a quote from the Trader. Missing or incorrect parameters = wrong pricing, failed booking, or legal risk.</div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">CORE TRADE ECONOMICS</div>
+      <table class="tbl">
+        <tr><th>PARAMETER</th><th>DESCRIPTION</th><th>EXAMPLE VALUES</th></tr>
+        <tr><td>Currency Pair</td><td>CCY1/CCY2. CCY1 = "commodity" currency being bought/sold. Convention: larger vs smaller economy.</td><td><span class="mono">EUR/USD · USD/JPY · GBP/USD · USD/INR</span></td></tr>
+        <tr><td>Option Type</td><td>Call = right to BUY CCY1. Put = right to SELL CCY1. Always stated from client's perspective.</td><td><span class="mono">Call · Put</span></td></tr>
+        <tr><td>Buy / Sell</td><td>Is the client buying (paying premium) or selling (receiving premium) the option?</td><td><span class="mono">Buy · Sell</span></td></tr>
+        <tr><td>Notional</td><td>Face value — the CCY1 amount the option covers. Drives premium magnitude.</td><td><span class="mono">10,000,000 EUR</span></td></tr>
+        <tr><td>Notional CCY</td><td>Which currency the notional is in. Usually CCY1 for standard interbank FX options.</td><td><span class="mono">CCY1 (EUR) · CCY2 (USD)</span></td></tr>
+        <tr><td>Strike</td><td>The agreed exchange rate at which the holder can exercise. Can be specified in multiple ways (see below).</td><td><span class="mono">1.0800 · ATM · 25D · 5% OTM</span></td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">DATE &amp; EXPIRY PARAMETERS</div>
+      <table class="tbl">
+        <tr><th>PARAMETER</th><th>DESCRIPTION</th><th>EXAMPLE VALUES</th></tr>
+        <tr><td>Trade Date</td><td>The date the deal is agreed. Legal binding starts here.</td><td><span class="mono">Today (T+0)</span></td></tr>
+        <tr><td>Spot Date</td><td>Standard settlement of the spot FX leg. T+2 for most pairs.</td><td><span class="mono">T+2 (T+1 for USD/CAD)</span></td></tr>
+        <tr><td>Expiry Date / Tenor</td><td>When the option right ceases. After this, OTM options are worthless.</td><td><span class="mono">1W · 2W · 1M · 3M · 6M · 1Y · 10-Sep-2025</span></td></tr>
+        <tr><td>Expiry Cut</td><td>Exact timezone + time when option expires on expiry date. Critical for near-money options at expiry.</td><td><span class="mono">NY 10:00 · Tokyo 15:00 · London 10:00</span></td></tr>
+        <tr><td>Premium Date</td><td>When the buyer pays premium to the seller. Normally spot date (T+2 from trade date).</td><td><span class="mono">T+2 · Deferred (on expiry)</span></td></tr>
+        <tr><td>Delivery Date</td><td>If exercised, when actual CCY exchange happens. Usually expiry + 2 business days.</td><td><span class="mono">Expiry + 2BD</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">EXERCISE &amp; SETTLEMENT PARAMETERS</div>
+      <table class="tbl">
+        <tr><th>PARAMETER</th><th>OPTIONS</th><th>NOTES</th></tr>
+        <tr><td>Exercise Style</td><td><span class="tag tg">European</span> &nbsp; <span class="tag tb">American</span></td><td>European = only at expiry (standard interbank). American = any time up to expiry — costlier due to early exercise optionality.</td></tr>
+        <tr><td>Settlement Type</td><td><span class="tag tg2">Physical</span> &nbsp; <span class="tag tc">Cash / NDF</span></td><td>Physical = actual CCY delivery. Cash = net settle one CCY (used for restricted CCYs: INR, CNH, KRW, BRL).</td></tr>
+        <tr><td>NDF Fixing Source</td><td>RBSL · SFEMC · Bloomberg</td><td>Only for NDF-settled options. Defines the reference rate used to calculate cash settlement amount at expiry.</td></tr>
+        <tr><td>Premium CCY</td><td>CCY1 · CCY2</td><td>Which CCY the premium is quoted and paid in. Interbank: usually CCY2 (e.g., USD for EUR/USD).</td></tr>
+        <tr><td>Premium Quotation</td><td>% of Notional · Pips · CCY Amount</td><td>E.g., 1.11% of 10M EUR = 111,000 EUR. Or 122 USD pips = 122,000 USD on a 10M EUR/USD option.</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">STRIKE SPECIFICATION — ALL METHODS</div>
+      <table class="tbl">
+        <tr><th>STRIKE TYPE</th><th>DEFINITION</th><th>EXAMPLE</th></tr>
+        <tr><td>Outright Rate</td><td>Absolute FX rate agreed as the strike. Most common for client trades.</td><td><span class="mono">1.0800</span></td></tr>
+        <tr><td>ATM Spot</td><td>Strike = current live spot rate at time of trade.</td><td><span class="mono">1.0842 (live)</span></td></tr>
+        <tr><td>ATMF</td><td>Strike = outright forward rate for the expiry tenor. Standard for interbank.</td><td><span class="mono">3M fwd = 1.0821</span></td></tr>
+        <tr><td>Delta-Based</td><td>Strike defined by the option's delta. Used in vol surface quoting conventions (10D, 25D).</td><td><span class="mono">25 Delta Call · 10 Delta Put</span></td></tr>
+        <tr><td>% OTM / ITM</td><td>Strike as a percentage above/below spot or forward.</td><td><span class="mono">5% OTM Call: 1.0842 × 1.05 = 1.1384</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">FULL RFQ EXAMPLE — IMPORTER HEDGING USD PAYABLE</div>
+    <table class="tbl">
+      <tr><th>FIELD</th><th>VALUE</th><th>RATIONALE</th></tr>
+      <tr><td>Currency Pair</td><td><span class="mono">USD/INR</span></td><td>Indian importer paying USD to a US supplier</td></tr>
+      <tr><td>Option Type</td><td><span class="mono">Call on USD (Put on INR)</span></td><td>Client needs to BUY USD — buys USD Call</td></tr>
+      <tr><td>Buy / Sell</td><td><span class="mono">Buy</span></td><td>Client pays premium, gets right to buy USD at strike</td></tr>
+      <tr><td>Notional</td><td><span class="mono">5,000,000 USD</span></td><td>Invoice amount due in 3 months</td></tr>
+      <tr><td>Strike</td><td><span class="mono">84.50 (USD/INR)</span></td><td>OTM relative to spot (spot = 83.80) — cheaper than ATM</td></tr>
+      <tr><td>Tenor / Expiry</td><td><span class="mono">3 months (10-Sep-2025)</span></td><td>Matches payment due date</td></tr>
+      <tr><td>Expiry Cut</td><td><span class="mono">RBI Fixing (Mumbai 12:30)</span></td><td>INR options use RBI reference rate cut</td></tr>
+      <tr><td>Exercise Style</td><td><span class="mono">European</span></td><td>Standard; American not needed for a one-time hedge</td></tr>
+      <tr><td>Settlement</td><td><span class="mono">Cash (NDF)</span></td><td>INR is a restricted currency — no physical delivery offshore</td></tr>
+      <tr><td>Premium</td><td><span class="mono">~0.85% of notional = ~42,500 USD</span></td><td>Upfront cost for protection. Paid on T+2.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════ TAB 3: PRICING ENGINE ════════════════ -->
+<div id="pricing" class="sec">
+  <div class="sec-head">Pricing Engine</div>
+  <div class="sec-desc">How the trader prices a vanilla FX option using the Garman-Kohlhagen model — Black-Scholes adapted for two risk-free interest rates (one per currency).</div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">GARMAN-KOHLHAGEN — MODEL INPUTS</div>
+      <table class="tbl">
+        <tr><th>INPUT</th><th>SYMBOL</th><th>DESCRIPTION</th><th>EXAMPLE</th></tr>
+        <tr><td>Spot Rate</td><td><span class="mono">S</span></td><td>Current live market exchange rate (CCY1/CCY2)</td><td><span class="mono">1.0842</span></td></tr>
+        <tr><td>Strike Rate</td><td><span class="mono">K</span></td><td>Agreed exercise rate from the RFQ</td><td><span class="mono">1.0800</span></td></tr>
+        <tr><td>Time to Expiry</td><td><span class="mono">T</span></td><td>Years from today to expiry. Day count: Act/365 (or Act/Act)</td><td><span class="mono">0.2500 (≈ 3M)</span></td></tr>
+        <tr><td>Implied Volatility</td><td><span class="mono">σ</span></td><td>Market's forward-looking vol for this tenor &amp; delta. Pulled from live vol surface — NOT historical vol.</td><td><span class="mono">6.85% annualised</span></td></tr>
+        <tr><td>Domestic Rate</td><td><span class="mono">r_d</span></td><td>Risk-free rate of CCY2 (quote currency). For EUR/USD: USD SOFR rate.</td><td><span class="mono">5.25% (USD)</span></td></tr>
+        <tr><td>Foreign Rate</td><td><span class="mono">r_f</span></td><td>Risk-free rate of CCY1 (base currency). For EUR/USD: EUR rate.</td><td><span class="mono">3.75% (EUR)</span></td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">G-K FORMULAE</div>
+      <div class="fx">
+        <div class="fx-lbl">CALL PRICE (right to buy CCY1)</div>
+        C = S·e<sup>−r_f·T</sup>·N(d₁)  −  K·e<sup>−r_d·T</sup>·N(d₂)
+      </div>
+      <div class="fx">
+        <div class="fx-lbl">PUT PRICE (right to sell CCY1)</div>
+        P = K·e<sup>−r_d·T</sup>·N(−d₂)  −  S·e<sup>−r_f·T</sup>·N(−d₁)
+      </div>
+      <div class="fx">
+        <div class="fx-lbl">d₁ AND d₂</div>
+        d₁ = [ ln(S/K) + (r_d − r_f + σ²/2)·T ] / (σ·√T)<br><br>
+        d₂ = d₁ − σ·√T
+      </div>
+      <div class="fx">
+        <div class="fx-lbl">PUT-CALL PARITY (FX)</div>
+        C − P = S·e<sup>−r_f·T</sup> − K·e<sup>−r_d·T</sup>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:var(--dim)">
+        N(·) = cumulative normal distribution function. <br>
+        The key difference from Black-Scholes: spot is discounted at <em>r_f</em> (CCY1 rate), not just risk-free rate — because holding the base currency earns the foreign interest rate.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">THE GREEKS — RISK SENSITIVITIES EVERY TRADER MONITORS</div>
+    <div class="ggrid">
+      <div class="gcrd">
+        <div class="gsym">Δ</div>
+        <div class="gname">DELTA</div>
+        <div class="gdef">Change in premium for +1 pip move in spot. Also ≈ probability option expires ITM. Used to size the spot/forward hedge.</div>
+        <div class="gval">Call: 0 → +1<br>Put: −1 → 0<br>ATM ≈ ±0.50</div>
+      </div>
+      <div class="gcrd">
+        <div class="gsym">Γ</div>
+        <div class="gname">GAMMA</div>
+        <div class="gdef">Rate of change of Delta per spot move. High near expiry for ATM options. Drives cost of dynamic delta hedging.</div>
+        <div class="gval">Always +ve for buyers.<br>Peaks at ATM strike near expiry.</div>
+      </div>
+      <div class="gcrd">
+        <div class="gsym">ν</div>
+        <div class="gname">VEGA</div>
+        <div class="gdef">Change in premium per 1% change in implied vol. Long options = long vega. Larger for longer-dated options.</div>
+        <div class="gval">Always +ve for buyers.<br>Peaks at ATM, longer tenor.</div>
+      </div>
+      <div class="gcrd">
+        <div class="gsym">Θ</div>
+        <div class="gname">THETA</div>
+        <div class="gdef">Premium lost per calendar day (time decay). Buyers pay theta; sellers earn it. Accelerates near expiry for ATM options.</div>
+        <div class="gval">−ve for buyers (daily loss).<br>+ve for sellers (daily gain).</div>
+      </div>
+      <div class="gcrd">
+        <div class="gsym">ρ</div>
+        <div class="gname">RHO</div>
+        <div class="gdef">Sensitivity to interest rate changes (r_d and r_f). Less critical for short-dated FX; more relevant for 1Y+ options.</div>
+        <div class="gval">r_d ↑ → Call ↑, Put ↓<br>r_f ↑ → Call ↓, Put ↑</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">VOL SURFACE — WHERE IMPLIED VOL COMES FROM</div>
+    <div class="sec-desc" style="margin-bottom:14px">The vol surface has different implied vols by tenor AND by delta (moneyness). Three market-quoted numbers reconstruct the smile for each tenor:</div>
+    <table class="tbl">
+      <tr><th>MARKET QUOTE</th><th>SYMBOL</th><th>WHAT IT CAPTURES</th><th>EUR/USD 1M EXAMPLE</th></tr>
+      <tr><td>ATM Vol</td><td><span class="mono">σ_ATM</span></td><td>Implied vol for the at-the-money forward option. The baseline level of vol for a tenor.</td><td><span class="mono">6.85%</span></td></tr>
+      <tr><td>25D Risk Reversal</td><td><span class="mono">RR₂₅</span></td><td>25D Call vol minus 25D Put vol. Positive = calls more expensive than puts = market skewed toward CCY1 upside. Measures directional vol skew.</td><td><span class="mono">+0.40% (calls richer)</span></td></tr>
+      <tr><td>25D Butterfly</td><td><span class="mono">BF₂₅</span></td><td>(25D Call vol + 25D Put vol)/2 minus ATM vol. Positive = wings expensive relative to centre. Measures vol smile convexity.</td><td><span class="mono">+0.25% (smile present)</span></td></tr>
+    </table>
+    <div style="font-size:11px;color:var(--dim);margin:12px 0 8px">Derived pillar vols for pricing a 25D option:</div>
+    <div class="vol-band">
+      <div class="vb-cell">
+        <div class="vb-delta">10D PUT</div>
+        <div class="vb-vol">7.60%</div>
+        <div class="vb-type">Deep OTM Put<br>(tail risk)</div>
+      </div>
+      <div class="vb-cell">
+        <div class="vb-delta">25D PUT</div>
+        <div class="vb-vol" style="color:var(--red)">6.85%</div>
+        <div class="vb-type">σ_ATM + BF₂₅ − RR₂₅/2<br>= 6.85%</div>
+      </div>
+      <div class="vb-cell" style="border-color:var(--gold)">
+        <div class="vb-delta">ATM (50D)</div>
+        <div class="vb-vol" style="color:var(--cyan)">6.85%</div>
+        <div class="vb-type">Baseline level<br>market-quoted</div>
+      </div>
+      <div class="vb-cell">
+        <div class="vb-delta">25D CALL</div>
+        <div class="vb-vol" style="color:var(--green)">7.25%</div>
+        <div class="vb-type">σ_ATM + BF₂₅ + RR₂₅/2<br>= 7.25%</div>
+      </div>
+      <div class="vb-cell">
+        <div class="vb-delta">10D CALL</div>
+        <div class="vb-vol">8.10%</div>
+        <div class="vb-type">Deep OTM Call<br>(upside risk)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ TAB 4: STRATEGIES ════════════════ -->
+<div id="strategies" class="sec">
+  <div class="sec-head">FXO Strategies</div>
+  <div class="sec-desc">From vanilla single-leg to multi-leg structured products. Each strategy targets a specific market view, hedge objective, or cost constraint.</div>
+
+  <div class="sdiv">VANILLA — SINGLE LEG</div>
+
+  <div class="scrd">
+    <div class="scrd-hdr"><div class="scrd-name">VANILLA CALL</div><div class="badge bull">▲ BULLISH ON CCY1</div></div>
+    <div class="scrd-body">
+      <div><div class="sf-lbl">LEGS</div><div class="sf-val">Buy 1 Call option</div></div>
+      <div><div class="sf-lbl">MARKET VIEW</div><div class="sf-val">Spot rises above strike at expiry</div></div>
+      <div><div class="sf-lbl">MAX LOSS</div><div class="sf-val">Premium paid (fixed, upfront)</div></div>
+      <div><div class="sf-lbl">MAX GAIN</div><div class="sf-val">Unlimited (spot − strike)</div></div>
+      <div><div class="sf-lbl">BREAKEVEN</div><div class="sf-val">Strike + premium in pips</div></div>
+      <div><div class="sf-lbl">DELTA</div><div class="sf-val">+0.50 ATM → +1.00 deep ITM</div></div>
+      <div><div class="sf-lbl">CLIENT USE CASE</div><div class="sf-val">Importer with USD payable: buys USD Call to cap cost if USD strengthens</div></div>
+      <div><div class="sf-lbl">PREMIUM COST</div><div class="sf-val">Full upfront — most expensive single option</div></div>
+    </div>
+  </div>
+
+  <div class="scrd">
+    <div class="scrd-hdr"><div class="scrd-name">VANILLA PUT</div><div class="badge bear">▼ BEARISH ON CCY1</div></div>
+    <div class="scrd-body">
+      <div><div class="sf-lbl">LEGS</div><div class="sf-val">Buy 1 Put option</div></div>
+      <div><div class="sf-lbl">MARKET VIEW</div><div class="sf-val">Spot falls below strike at expiry</div></div>
+      <div><div class="sf-lbl">MAX LOSS</div><div class="sf-val">Premium paid (fixed, upfront)</div></div>
+      <div><div class="sf-lbl">MAX GAIN</div><div class="sf-val">Strike − Spot (down to zero)</div></div>
+      <div><div class="sf-lbl">BREAKEVEN</div><div class="sf-val">Strike − premium in pips</div></div>
+      <div><div class="sf-lbl">DELTA</div><div class="sf-val">−0.50 ATM → −1.00 deep ITM</div></div>
+      <div><div class="sf-lbl">CLIENT USE CASE</div><div class="sf-val">Exporter with USD receivable: buys USD Put (EUR Call) to protect if USD weakens vs EUR</div></div>
+      <div><div class="sf-lbl">PREMIUM COST</div><div class="sf-val">Full upfront — fully paid protection</div></div>
+    </div>
+  </div>
+
+  <div class="sdiv">TWO-LEG STRUCTURES</div>
+
+  <div class="scrd">
+    <div class="scrd-hdr"><div class="scrd-name">RISK REVERSAL</div><div class="badge bull">▲ DIRECTIONAL · NEAR ZERO COST</div></div>
+    <div class="scrd-body">
+      <div><div class="sf-lbl">LEGS</div><div class="sf-val">Buy OTM Call (25D) + Sell OTM Put (25D)</div></div>
+      <div><div class="sf-lbl">MARKET VIEW</div><div class="sf-val">Spot rises. Willing to sacrifice downside participation to fund the upside hedge.</div></div>
+      <div><div class="sf-lbl">MAX LOSS (DOWN)</div><div class="sf-val">Obligated to buy CCY1 at put strike if spot falls hard (unlimited loss below put strike)</div></div>
+      <div><div class="sf-lbl">MAX GAIN</div><div class="sf-val">Unlimited above call strike</div></div>
+      <div><div class="sf-lbl">PREMIUM COST</div><div class="sf-val">Near zero — call premium funded by put premium received. Small net pay/receive.</div></div>
+      <div><div class="sf-lbl">KEY RISK</div><div class="sf-val">Short put = obligated if spot collapses. Client must understand this tail risk.</div></div>
+      <div><div class="sf-lbl">CLIENT USE CASE</div><div class="sf-val">Importer: buy USD Call (25D), sell USD Put (25D) — free upside protection, but locked if USD weakens</div></div>
+      <div><div class="sf-lbl">INTERBANK QUOTE</div><div class="sf-val">"1M 25D RR" = vol differential between 25D Call and 25D Put. Positive = calls richer.</div></div>
+    </div>
+  </div>
+
+  <div class="scrd">
+    <div class="scrd-hdr"><div class="scrd-name">ZERO-COST COLLAR</div><div class="badge neut">◆ HEDGE WITH FLOOR + CAP</div></div>
+    <div class="scrd-body">
+      <div><div class="sf-lbl">LEGS</div><div class="sf-val">Buy OTM Put + Sell OTM Call (for exporter hedging CCY1 receivable)</div></div>
+      <div><div class="sf-lbl">MARKET VIEW</div><div class="sf-val">Accept a band of rates. Protect downside at a floor; give up upside above cap.</div></div>
+      <div><div class="sf-lbl">FLOOR</div><div class="sf-val">Put strike = worst-case rate for exporter. Always protected below this level.</div></div>
+      <div><div class="sf-lbl">CAP</div><div class="sf-val">Call strike = best-case rate. Upside capped here.</div></div>
+      <div><div class="sf-lbl">PREMIUM COST</div><div class="sf-val">Zero — put and call premiums sized to match. Very popular corporate hedge.</div></div>
+      <div><div class="sf-lbl">KEY RISK</div><div class="sf-val">Misses favourable spot moves beyond the cap. Client "gives up" potential gains.</div></div>
+      <div><div class="sf-lbl">CLIENT USE CASE</div><div class="sf-val">Exporter with EUR receivable: buy EUR Put floor at 1.0600, sell EUR Call cap at 1.1100. Free band protection.</div></div>
+      <div><div class="sf-lbl">EQUIVALENT TO</div><div class="sf-val">Risk Reversal — same economic structure, different naming convention by context</div></div>
+    </div>
+  </div>
+
+  <div class="scrd">
+    <div class="scrd-hdr"><div class="scrd-name">STRADDLE</div><div class="badge vol">◈ LONG VOLATILITY</div></div>
+    <div class="scrd-body">
+      <div><div class="sf-lbl">LEGS</div><div class="sf-val">Buy ATM Call + Buy ATM Put — same strike, same expiry</div></div>
+      <div><div class="sf-lbl">MARKET VIEW</div><div class="sf-val">Large move expected in either direction. Pure volatility play.</div></div>
+      <div><div class="sf-lbl">MAX LOSS</div><div class="sf-val">Both premiums paid — only if spot stays exactly at strike at expiry</div></div>
+      <div><div class="sf-lbl">MAX GAIN</div><div class="sf-val">Unlimited to upside; large to downside (strike to zero)</div></div>
+      <div><div class="sf-lbl">BREAKEVEN</div><div class="sf-val">Strike ± (sum of both premiums in pips)</div></div>
+      <div><div class="sf-lbl">VEGA</div><div class="sf-val">+2× single option — strongly benefits if realised vol &gt; implied vol</div></div>
+      <div><div class="sf-lbl">THETA</div><div class="sf-val">Negative (paying double time decay daily)</div></div>
+      <div><div class="sf-lbl">USE CASE</div><div class="sf-val">Ahead of binary event: FOMC, election, NFP — big move guaranteed but direction unknown</div></div>
+    </div>
+  </div>
+
+  <div class="scrd">
+    <div class="scrd-hdr"><div class="scrd-name">STRANGLE</div><div class="badge vol">◈ LONG VOLATILITY · CHEAPER</div></div>
+    <div class="scrd-body">
+      <div><div class="sf-lbl">LEGS</div><div class="sf-val">Buy OTM Call (25D) + Buy OTM Put (25D) — different strikes</div></div>
+      <div><div class="sf-lbl">MARKET VIEW</div><div class="sf-val">Very large move expected. Cheaper than straddle; needs larger move to profit.</div></div>
+      <div><div class="sf-lbl">MAX LOSS</div><div class="sf-val">Both premiums — if spot finishes between the two strikes</div></div>
+      <div><div class="sf-lbl">MAX GAIN</div><div class="sf-val">Unlimited to upside; large to downside</div></div>
+      <div><div class="sf-lbl">VS STRADDLE</div><div class="sf-val">Wider breakevens, lower cost, lower vega. Trade-off: needs bigger move.</div></div>
+      <div><div class="sf-lbl">VEGA</div><div class="sf-val">Positive. Lower than straddle (OTM options carry less vega).</div></div>
+      <div><div class="sf-lbl">THETA</div><div class="sf-val">Negative but smaller than straddle</div></div>
+      <div><div class="sf-lbl">USE CASE</div><div class="sf-val">Hedge fund expecting large FX move but wants cheaper exposure vs straddle</div></div>
+    </div>
+  </div>
+
+  <div class="sdiv">THREE-LEG STRUCTURES</div>
+
+  <div class="scrd">
+    <div class="scrd-hdr"><div class="scrd-name">SEAGULL</div><div class="badge bull">▲ DIRECTIONAL · CAPPED · NEAR ZERO COST</div></div>
+    <div class="scrd-body">
+      <div><div class="sf-lbl">LEGS</div><div class="sf-val">Buy OTM Call (25D) + Sell ATM Call + Sell OTM Put (25D)</div></div>
+      <div><div class="sf-lbl">MARKET VIEW</div><div class="sf-val">Moderate spot rise expected (not runaway). Budget-conscious client.</div></div>
+      <div><div class="sf-lbl">PROFIT ZONE</div><div class="sf-val">Between the put strike and the sold ATM call — a corridor of participation</div></div>
+      <div><div class="sf-lbl">MAX GAIN</div><div class="sf-val">Capped at sold ATM call strike. Unlike risk reversal, upside is limited.</div></div>
+      <div><div class="sf-lbl">MAX LOSS (DOWN)</div><div class="sf-val">Potentially large below put strike (short put = obligated buyer)</div></div>
+      <div><div class="sf-lbl">PREMIUM COST</div><div class="sf-val">Near zero — sell two options to fully fund one</div></div>
+      <div><div class="sf-lbl">USE CASE</div><div class="sf-val">Importer wants USD cap cheaply, expects USD to rise modestly and has a floor view on acceptable cost</div></div>
+      <div><div class="sf-lbl">KEY RISK</div><div class="sf-val">Short ATM call limits gains if spot races upward; short OTM put triggers obligation if spot crashes</div></div>
+    </div>
+  </div>
+
+  <div class="scrd">
+    <div class="scrd-hdr"><div class="scrd-name">BUTTERFLY SPREAD</div><div class="badge neut">◆ SHORT VOLATILITY · BOUNDED</div></div>
+    <div class="scrd-body">
+      <div><div class="sf-lbl">LEGS</div><div class="sf-val">Buy 1 OTM Call + Sell 2 ATM Calls + Buy 1 further OTM Call</div></div>
+      <div><div class="sf-lbl">MARKET VIEW</div><div class="sf-val">Spot stays close to current level. Expects quiet markets. Short vol.</div></div>
+      <div><div class="sf-lbl">MAX GAIN</div><div class="sf-val">If spot = ATM strike exactly at expiry (bell curve peak)</div></div>
+      <div><div class="sf-lbl">MAX LOSS</div><div class="sf-val">Net premium paid — fully bounded, unlike naked short options</div></div>
+      <div><div class="sf-lbl">PAYOFF SHAPE</div><div class="sf-val">Bell-curve — earns maximum at ATM, loses premium beyond the wings</div></div>
+      <div><div class="sf-lbl">VEGA</div><div class="sf-val">Negative — profits if implied vol falls after entry</div></div>
+      <div><div class="sf-lbl">USE CASE</div><div class="sf-val">Expect range-bound FX; want to sell expensive vol with limited downside risk</div></div>
+      <div><div class="sf-lbl">NOTE</div><div class="sf-val">"25D Butterfly" in vol surface = market's measure of wing vol vs ATM (the vol smile)</div></div>
+    </div>
+  </div>
+
+  <div class="sdiv">EXOTIC &amp; BARRIER OPTIONS</div>
+
+  <div class="card">
+    <table class="tbl">
+      <tr><th>STRATEGY</th><th>STRUCTURE</th><th>CHEAPER?</th><th>KEY EXTRA PARAMETER</th><th>USE CASE</th></tr>
+      <tr><td>Knock-In (KI)</td><td>Vanilla option that activates only if spot touches a barrier level before expiry. Otherwise expires worthless even if ITM.</td><td><span class="tag tg2">YES — 30–60% cheaper</span></td><td>Barrier level &amp; direction (e.g., spot must hit 1.1200 to activate EUR Call)</td><td>Client wants cheap hedge — accepts risk option may never activate</td></tr>
+      <tr><td>Knock-Out (KO)</td><td>Vanilla option that is cancelled if spot touches a barrier. Option disappears even if it was in-the-money.</td><td><span class="tag tg2">YES — 20–50% cheaper</span></td><td>Barrier level (e.g., EUR Call knocked out if spot &gt; 1.1500)</td><td>Client expects range-bound market; buys cheaper option, risks losing protection at worst moment</td></tr>
+      <tr><td>Double Barrier</td><td>Option with both a KI and KO barrier — lives only within a corridor. Cheapest barrier structure.</td><td><span class="tag tg2">VERY CHEAP</span></td><td>Lower barrier + upper barrier (range width = key risk)</td><td>Client is highly range-bound; ultra-cheap hedge for stable CCY exposure</td></tr>
+      <tr><td>Digital / Binary</td><td>Pays a fixed cash amount if spot is above/below a level at expiry. All-or-nothing payoff.</td><td><span class="tag tb">FIXED PAYOUT</span></td><td>Trigger level + fixed payout amount in CCY2</td><td>Hedge a specific threshold: e.g., pay USD 1M if EUR/USD &gt; 1.1000 at expiry to offset a contract clause</td></tr>
+      <tr><td>One-Touch</td><td>Pays fixed amount if spot ever touches a level (American-style digital) — at any point during life.</td><td><span class="tag tb">FIXED PAYOUT</span></td><td>Touch level + payout CCY + settlement (at touch or at expiry)</td><td>High-conviction directional bet; earn on any intraday breach of a level</td></tr>
+      <tr><td>Window Barrier</td><td>Barrier is only active during a specific time window — not the full option life. Reduces barrier risk.</td><td><span class="tag tg2">MODERATELY</span></td><td>Window start date + window end date</td><td>Reduce barrier exposure during a known volatile period (e.g., exclude FOMC week)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════ TAB 5: HEDGING ════════════════ -->
+<div id="hedging" class="sec">
+  <div class="sec-head">Hedging the FXO Book</div>
+  <div class="sec-desc">After selling an FX option, the trader does not take naked risk. Each Greek exposure is identified and hedged — using spot, forwards, and other options.</div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">DELTA HEDGING</div>
+      <div class="prow"><div class="pk">What it is</div><div class="pv">Neutralising directional spot exposure from the option. Delta = notional units of CCY1 the trader is effectively long or short due to holding the option.</div></div>
+      <div class="prow"><div class="pk">Example</div><div class="pv">Trader sells EUR/USD Call 10M, delta = −0.50. Trader is effectively short 5M EUR. Hedge: buy 5M EUR spot.</div></div>
+      <div class="prow"><div class="pk">Instrument</div><div class="pv">FX Spot or FX Forward (forward preferred for maturity-matching with the option delivery date)</div></div>
+      <div class="prow"><div class="pk">Dynamic nature</div><div class="pv">Delta changes as spot moves (due to gamma). Trader re-hedges delta when it drifts beyond a threshold — called "gamma scalping."</div></div>
+      <div class="prow"><div class="pk">Re-hedge trigger</div><div class="pv">Some desks re-hedge at fixed intervals (hourly), others at fixed delta shift thresholds (e.g., every 0.05 delta move).</div></div>
+      <div class="prow"><div class="pk">Hedging cost</div><div class="pv">Each re-hedge costs bid/ask spread × lot size. High-gamma positions near expiry cost most to delta-hedge. This is "gamma bleed."</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">GAMMA HEDGING</div>
+      <div class="prow"><div class="pk">What it is</div><div class="pv">Gamma = how fast delta changes per spot move. Short gamma = delta chases spot against you. Must re-hedge constantly (expensive).</div></div>
+      <div class="prow"><div class="pk">Who has it</div><div class="pv">Option sellers are short gamma. Option buyers are long gamma. Short gamma = convex risk: large moves hurt regardless of direction.</div></div>
+      <div class="prow"><div class="pk">How to hedge</div><div class="pv">Buy options of similar maturity and strike to offset short gamma. Cannot be hedged with spot or forwards — only options create gamma.</div></div>
+      <div class="prow"><div class="pk">P&amp;L from gamma</div><div class="pv">P&amp;L ≈ ½ × Γ × (ΔSpot)². Long gamma: profits from large moves. Short gamma: loses on large moves in either direction.</div></div>
+      <div class="prow"><div class="pk">Gamma vs Theta</div><div class="pv">Long gamma = earn from spot moves but pay theta (time decay) daily. Short gamma = earn theta but hurt by large spot moves. Implied vol prices this tradeoff.</div></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">VEGA HEDGING</div>
+      <div class="prow"><div class="pk">What it is</div><div class="pv">Vega = P&amp;L sensitivity to 1% change in implied vol. Short vega = hurt if market prices in more volatility after you sold the option.</div></div>
+      <div class="prow"><div class="pk">Who has it</div><div class="pv">Option sellers are short vega (sold expensive vol; hope it falls). Option buyers are long vega (hope vol rises to inflate their option's value).</div></div>
+      <div class="prow"><div class="pk">How to hedge</div><div class="pv">Buy/sell options of the same tenor to offset net book vega. Must match tenor — 3M and 1Y vol move independently (vol curve risk).</div></div>
+      <div class="prow"><div class="pk">Vega bucketing</div><div class="pv">Traders run vega reports by tenor bucket (1W, 1M, 3M, 6M, 1Y, 2Y). Each bucket is hedged separately — cross-tenor hedges leave basis risk.</div></div>
+      <div class="prow"><div class="pk">Realised vs Implied</div><div class="pv">If realised vol (actual spot moves) is lower than implied vol at trade entry, short vega wins. Daily theta earned &gt; dynamic hedge cost. Core driver of vanilla option seller P&amp;L.</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">HEDGE SEQUENCE — TRADER SELLS EUR CALL EXAMPLE</div>
+      <table class="tbl">
+        <tr><th>STEP</th><th>ACTION</th><th>INSTRUMENT</th><th>PURPOSE</th></tr>
+        <tr><td>1. Book trade</td><td>Sell EUR/USD Call · 10M EUR · 1M · strike 1.0800</td><td>OTC Option</td><td>Earn premium (vol seller)</td></tr>
+        <tr><td>2. Instant delta hedge</td><td>Sell EUR/USD Call gives delta −0.50 × 10M = short 5M EUR exposure. Buy 5M EUR spot.</td><td>EUR/USD Spot</td><td>Neutralise directional risk</td></tr>
+        <tr><td>3. Monitor gamma</td><td>Spot moves to 1.0950. Delta now −0.65. Buy 1.5M more EUR to rebalance.</td><td>EUR/USD Spot</td><td>Re-delta-hedge after move</td></tr>
+        <tr><td>4. Vega position</td><td>Book is short vega on 1M bucket. Vol rises 0.5%: mark-to-market loss = Vega × 0.5%.</td><td>Monitor / hedge optionally</td><td>Decide to buy offsetting option or carry short vol</td></tr>
+        <tr><td>5. Expiry (ITM)</td><td>Spot = 1.0950 &gt; 1.0800. Client exercises. Deliver 10M EUR at 1.0800. Buy back spot hedge.</td><td>Spot delivery</td><td>Unwind delta hedge on exercise</td></tr>
+        <tr><td>6. Expiry (OTM)</td><td>Spot = 1.0700 &lt; 1.0800. Option lapses. Buy back spot hedge (sell 5M EUR hedge).</td><td>EUR/USD Spot</td><td>Unwind delta hedge — option worthless</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">HEDGE INSTRUMENTS SUMMARY</div>
+    <table class="tbl">
+      <tr><th>GREEK RISK</th><th>CAN BE HEDGED WITH</th><th>CANNOT BE HEDGED WITH</th><th>FREQUENCY</th></tr>
+      <tr><td>Delta (Δ)</td><td>FX Spot, FX Forward, FX Futures</td><td>Options alone (options also move delta)</td><td>Continuously / threshold-based</td></tr>
+      <tr><td>Gamma (Γ)</td><td>Options only (same or similar tenor/strike)</td><td>Spot, Forward, Futures (zero gamma)</td><td>Periodically or at large moves</td></tr>
+      <tr><td>Vega (ν)</td><td>Options only (matched tenor bucket)</td><td>Spot, Forward, Futures (zero vega)</td><td>Daily / when vol moves materially</td></tr>
+      <tr><td>Theta (Θ)</td><td>Not hedged directly — it is earned/paid naturally via time passing</td><td>—</td><td>Earned/paid daily as P&amp;L</td></tr>
+      <tr><td>Rho (ρ)</td><td>Interest rate swaps, FX forwards (embed rate differential)</td><td>Spot (no rate sensitivity)</td><td>Only for long-dated options (1Y+)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════ TAB 6: TRADE BOOKING ════════════════ -->
+<div id="booking" class="sec">
+  <div class="sec-head">Trade Booking</div>
+  <div class="sec-desc">All fields captured when a dealer books an FXO trade in a front office system (Murex MX.3 / Calypso / Finastra Summit). These become the legal trade record — input errors = P&amp;L risk, confirmation fails, settlement breaks.</div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">IDENTIFICATION &amp; PARTIES</div>
+      <table class="tbl">
+        <tr><th>FIELD</th><th>TYPE</th><th>EXAMPLE VALUE</th></tr>
+        <tr><td>Trade ID</td><td>Auto-generated</td><td><span class="mono">FXO-2025-0043821</span></td></tr>
+        <tr><td>Trade Date</td><td>Date</td><td><span class="mono">10-Jun-2025</span></td></tr>
+        <tr><td>Trade Timestamp (UTC)</td><td>Timestamp</td><td><span class="mono">09:42:31 UTC</span></td></tr>
+        <tr><td>Legal Entity</td><td>Enum</td><td><span class="mono">Wells Fargo Bank N.A.</span></td></tr>
+        <tr><td>Book / Portfolio</td><td>Enum</td><td><span class="mono">FX-OPT-CORP-BOOK1</span></td></tr>
+        <tr><td>Trader ID</td><td>User ID</td><td><span class="mono">T.RAMIREZ.042</span></td></tr>
+        <tr><td>Sales ID</td><td>User ID</td><td><span class="mono">S.PATEL.017</span></td></tr>
+        <tr><td>Counterparty Name</td><td>Free text / CRM ID</td><td><span class="mono">Infosys Limited</span></td></tr>
+        <tr><td>Counterparty LEI</td><td>20-char LEI code</td><td><span class="mono">335800V9FQZTU7BGNP86</span></td></tr>
+        <tr><td>Counterparty Type</td><td>Enum</td><td><span class="mono">Corporate · Institutional · Interbank</span></td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">TRADE ECONOMICS</div>
+      <table class="tbl">
+        <tr><th>FIELD</th><th>TYPE</th><th>EXAMPLE VALUE</th></tr>
+        <tr><td>Product Type</td><td>Enum</td><td><span class="mono">FX Vanilla Option</span></td></tr>
+        <tr><td>Buy / Sell</td><td>Enum</td><td><span class="mono">Sell (from bank's perspective)</span></td></tr>
+        <tr><td>Option Type</td><td>Enum</td><td><span class="mono">Call · Put</span></td></tr>
+        <tr><td>Currency Pair</td><td>ISO 4217 pair</td><td><span class="mono">EUR/USD</span></td></tr>
+        <tr><td>Notional CCY</td><td>ISO 4217</td><td><span class="mono">EUR (CCY1)</span></td></tr>
+        <tr><td>Notional Amount</td><td>Decimal</td><td><span class="mono">10,000,000</span></td></tr>
+        <tr><td>Strike Rate</td><td>Decimal (6 dp)</td><td><span class="mono">1.080000</span></td></tr>
+        <tr><td>Spot Rate at Trade</td><td>Decimal (reference)</td><td><span class="mono">1.084200</span></td></tr>
+        <tr><td>Forward Rate</td><td>Decimal (reference)</td><td><span class="mono">1.082100 (3M outright)</span></td></tr>
+        <tr><td>Exercise Style</td><td>Enum</td><td><span class="mono">European · American</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">DATES &amp; SETTLEMENT</div>
+      <table class="tbl">
+        <tr><th>FIELD</th><th>TYPE</th><th>EXAMPLE VALUE</th></tr>
+        <tr><td>Value Date (Spot)</td><td>Date</td><td><span class="mono">12-Jun-2025 (T+2)</span></td></tr>
+        <tr><td>Expiry Date</td><td>Date</td><td><span class="mono">10-Sep-2025</span></td></tr>
+        <tr><td>Expiry Time</td><td>HH:MM + TZ</td><td><span class="mono">10:00 New York</span></td></tr>
+        <tr><td>Expiry Cut</td><td>Enum</td><td><span class="mono">NY · Tokyo · London</span></td></tr>
+        <tr><td>Delivery Date</td><td>Date</td><td><span class="mono">12-Sep-2025 (Expiry + 2BD)</span></td></tr>
+        <tr><td>Premium Date</td><td>Date</td><td><span class="mono">12-Jun-2025</span></td></tr>
+        <tr><td>Settlement Type</td><td>Enum</td><td><span class="mono">Physical · Cash (NDF)</span></td></tr>
+        <tr><td>NDF Fixing Source</td><td>Enum — only for NDF</td><td><span class="mono">RBSL · SFEMC · Bloomberg BFIX</span></td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">PREMIUM &amp; CONFIRMATION</div>
+      <table class="tbl">
+        <tr><th>FIELD</th><th>TYPE</th><th>EXAMPLE VALUE</th></tr>
+        <tr><td>Premium Amount</td><td>Decimal</td><td><span class="mono">111,000</span></td></tr>
+        <tr><td>Premium CCY</td><td>ISO 4217</td><td><span class="mono">EUR</span></td></tr>
+        <tr><td>Premium % of Notional</td><td>Decimal</td><td><span class="mono">1.1100%</span></td></tr>
+        <tr><td>Premium in Pips (CCY2)</td><td>Integer</td><td><span class="mono">122 pips (= 122,000 USD equiv.)</span></td></tr>
+        <tr><td>Implied Volatility Used</td><td>Decimal</td><td><span class="mono">6.85% (booked, for P&amp;L reference)</span></td></tr>
+        <tr><td>Bank Nostro Account</td><td>IBAN / SWIFT BIC</td><td><span class="mono">WFBIUS6S · USD nostro at CHIPS</span></td></tr>
+        <tr><td>Client Settlement Account</td><td>IBAN / SWIFT</td><td><span class="mono">As per ISDA CSA / SSI on file</span></td></tr>
+        <tr><td>Confirmation Method</td><td>Enum</td><td><span class="mono">SWIFT MT300 · MarkitSERV · Email</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ADDITIONAL FIELDS FOR EXOTIC / BARRIER OPTIONS</div>
+    <table class="tbl">
+      <tr><th>FIELD</th><th>APPLICABLE TO</th><th>DESCRIPTION</th><th>EXAMPLE</th></tr>
+      <tr><td>Barrier Type</td><td>KI / KO</td><td>Whether the barrier activates or cancels the option</td><td><span class="mono">Knock-In · Knock-Out</span></td></tr>
+      <tr><td>Barrier Direction</td><td>KI / KO</td><td>Upper barrier (spot must rise to touch) or lower barrier (spot must fall)</td><td><span class="mono">Upper · Lower</span></td></tr>
+      <tr><td>Barrier Level</td><td>KI / KO</td><td>The FX rate that triggers the barrier event</td><td><span class="mono">1.1200 (upper KO for EUR Call)</span></td></tr>
+      <tr><td>Barrier Observation</td><td>KI / KO</td><td>How barrier is checked: any intraday tick, daily close, or only at expiry</td><td><span class="mono">Continuous · Daily Close · European</span></td></tr>
+      <tr><td>Rebate</td><td>KO only</td><td>Fixed amount paid to the buyer if the option is knocked out (partial compensation)</td><td><span class="mono">USD 50,000 paid on KO event</span></td></tr>
+      <tr><td>Payout Amount</td><td>Digital / Binary</td><td>The fixed cash sum paid if the trigger condition is met at expiry</td><td><span class="mono">USD 1,000,000</span></td></tr>
+      <tr><td>Trigger Level</td><td>Digital / One-Touch</td><td>The FX rate above/below which the fixed payout triggers</td><td><span class="mono">1.1000 for EUR/USD Digital Call</span></td></tr>
+      <tr><td>Touch Style</td><td>One-Touch</td><td>Settlement: immediately on touch, or at expiry date even if touched earlier</td><td><span class="mono">At Expiry · At Touch</span></td></tr>
+      <tr><td>Window Start Date</td><td>Window Barrier</td><td>Start of period when barrier is active (before this, barrier cannot trigger)</td><td><span class="mono">01-Aug-2025</span></td></tr>
+      <tr><td>Window End Date</td><td>Window Barrier</td><td>End of period when barrier is active</td><td><span class="mono">31-Aug-2025</span></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">BOOKING CHECKLIST — COMMON ERRORS THAT CREATE BREAKS</div>
+    <table class="tbl">
+      <tr><th>ERROR TYPE</th><th>WHAT GOES WRONG</th><th>IMPACT</th></tr>
+      <tr><td>Wrong Buy/Sell</td><td>Bank books itself as Buyer when it sold the option</td><td>Inverted P&amp;L, wrong delta hedge direction, confirmation mismatch</td></tr>
+      <tr><td>Notional CCY wrong</td><td>Notional booked in CCY2 instead of CCY1</td><td>Premium calculated on wrong base — large P&amp;L error at scale</td></tr>
+      <tr><td>Expiry cut mismatch</td><td>NY cut booked, client agreed Tokyo cut</td><td>Near-money options may exercise at wrong time — legal dispute</td></tr>
+      <tr><td>Wrong settlement type</td><td>Physical booked for a restricted CCY (INR, CNH)</td><td>Settlement failure — cannot deliver offshore; regulatory breach</td></tr>
+      <tr><td>Wrong premium date</td><td>Premium date = trade date (T+0) instead of T+2</td><td>Failed nostro payment, SWIFT rejection, counterparty complaint</td></tr>
+      <tr><td>Strike typo</td><td>Strike entered as 1.8000 instead of 1.0800</td><td>Deep ITM option priced at par — massive MTM loss discovered at EOD</td></tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- end content -->
+
+<script>
+function show(id, el) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
