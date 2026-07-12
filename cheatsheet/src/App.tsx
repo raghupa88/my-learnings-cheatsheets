@@ -8,6 +8,8 @@ import ClaudeCodeLayout from './routes/claude-code/index';
 import ClaudeCodePage from './routes/claude-code/ClaudeCodePage';
 import FxOptionsLayout from './routes/fx-options/index';
 import FxOptionsPage from './routes/fx-options/FxOptionsPage';
+import BackendLayout from './routes/backend/index';
+import BackendPage from './routes/backend/BackendPage';
 
 export default function App() {
   return (
@@ -22,6 +24,9 @@ export default function App() {
         </Route>
         <Route path="/fx-options" element={<FxOptionsLayout />}>
           <Route index element={<FxOptionsPage />} />
+        </Route>
+        <Route path="/backend" element={<BackendLayout />}>
+          <Route index element={<BackendPage />} />
         </Route>
         <Route path="/claude-code" element={<ClaudeCodeLayout />}>
           <Route index element={<ClaudeCodePage />} />
