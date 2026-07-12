@@ -7,7 +7,9 @@ const NAV_LINKS = [
   { to: '/derivatives-forex', label: 'D&FX' },
   { to: '/fx-options', label: 'FX & Options' },
   { to: '/backend', label: 'Backend' },
+  { to: '/frontend', label: 'Frontend' },
   { to: '/claude-code', label: 'Claude Code', end: true },
+  { to: '/progress', label: '📊 Progress' },
 ];
 
 export default function ClaudeCodeLayout() {

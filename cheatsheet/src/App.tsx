@@ -10,6 +10,10 @@ import FxOptionsLayout from './routes/fx-options/index';
 import FxOptionsPage from './routes/fx-options/FxOptionsPage';
 import BackendLayout from './routes/backend/index';
 import BackendPage from './routes/backend/BackendPage';
+import FrontendLayout from './routes/frontend/index';
+import FrontendPage from './routes/frontend/FrontendPage';
+import ProgressLayout from './routes/progress/index';
+import ProgressPage from './routes/progress/ProgressPage';
 
 export default function App() {
   return (
@@ -27,6 +31,12 @@ export default function App() {
         </Route>
         <Route path="/backend" element={<BackendLayout />}>
           <Route index element={<BackendPage />} />
+        </Route>
+        <Route path="/frontend" element={<FrontendLayout />}>
+          <Route index element={<FrontendPage />} />
+        </Route>
+        <Route path="/progress" element={<ProgressLayout />}>
+          <Route index element={<ProgressPage />} />
         </Route>
         <Route path="/claude-code" element={<ClaudeCodeLayout />}>
           <Route index element={<ClaudeCodePage />} />

@@ -5,14 +5,14 @@ import '../derivatives-forex/layout.css';
 
 const NAV_LINKS = [
   { to: '/derivatives-forex', label: 'D&FX' },
-  { to: '/fx-options', label: 'FX & Options', end: true },
+  { to: '/fx-options', label: 'FX & Options' },
   { to: '/backend', label: 'Backend' },
   { to: '/frontend', label: 'Frontend' },
   { to: '/claude-code', label: 'Claude Code' },
-  { to: '/progress', label: '📊 Progress' },
+  { to: '/progress', label: '📊 Progress', end: true },
 ];
 
-export default function FxOptionsLayout() {
+export default function ProgressLayout() {
   const [theme, toggleTheme] = useTheme();
   const location = useLocation();
 
@@ -20,10 +20,10 @@ export default function FxOptionsLayout() {
     <div className="layout">
       <nav className="layout__nav">
         <div className="layout__nav-inner">
-          <NavLink to="/fx-options" className="layout__logo" aria-label="FX & Options">
-            <span className="layout__logo-icon">⬡</span>
+          <NavLink to="/progress" className="layout__logo" aria-label="Learning Progress">
+            <span className="layout__logo-icon">📊</span>
             <span className="layout__logo-text">
-              FX &amp; Options<span className="layout__logo-sub"> Deep Learning</span>
+              Learning Progress<span className="layout__logo-sub"> Dashboard</span>
             </span>
           </NavLink>
 
@@ -52,7 +52,7 @@ export default function FxOptionsLayout() {
       </main>
 
       <footer className="layout__footer">
-        <p>FX &amp; Options Deep Learning · SCB Principal Engineer Reference · {new Date().getFullYear()}</p>
+        <p>Learning Progress · All data stored locally in your browser · {new Date().getFullYear()}</p>
         <p className="layout__footer-sub">
           <span className="layout__route-indicator">{location.pathname}</span>
         </p>

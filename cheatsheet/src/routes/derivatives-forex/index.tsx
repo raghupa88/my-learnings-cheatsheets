@@ -8,8 +8,11 @@ const NAV_LINKS = [
   { to: '/derivatives-forex/derivatives', label: 'Derivatives' },
   { to: '/derivatives-forex/forex', label: 'Forex' },
   { to: '/derivatives-forex/glossary', label: 'Glossary' },
-  { to: '/fx-options', label: 'FX & Options ↗' },
+  { to: '/fx-options', label: 'FX & Options' },
+  { to: '/backend', label: 'Backend' },
+  { to: '/frontend', label: 'Frontend' },
   { to: '/claude-code', label: 'Claude Code' },
+  { to: '/progress', label: '📊 Progress' },
 ];
 
 export default function DerivativesForexLayout() {

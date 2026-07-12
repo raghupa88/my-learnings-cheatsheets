@@ -1,0 +1,43 @@
+.tc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--color-border, #e5e7eb);
+  background: var(--color-surface, #fff);
+  color: var(--color-muted, #9ca3af);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.tc-btn:hover {
+  border-color: #10b981;
+  color: #059669;
+  background: #f0fdf4;
+}
+.tc-btn--checked {
+  background: #d1fae5;
+  border-color: #10b981;
+  color: #065f46;
+}
+.tc-btn--checked:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+.tc-btn__icon { font-size: 0.75rem; }
+.tc-btn__icon--empty { color: var(--color-border, #d1d5db); }
+
+@media (prefers-color-scheme: dark) {
+  .tc-btn--checked { background: #064e3b; border-color: #059669; color: #6ee7b7; }
+  .tc-btn--checked:hover { background: #450a0a; border-color: #ef4444; color: #fca5a5; }
+  .tc-btn:hover { background: #022c22; border-color: #10b981; color: #34d399; }
+}
+:root[data-theme="dark"] .tc-btn--checked { background: #064e3b; border-color: #059669; color: #6ee7b7; }
+:root[data-theme="dark"] .tc-btn--checked:hover { background: #450a0a; border-color: #ef4444; color: #fca5a5; }
+:root[data-theme="dark"] .tc-btn:hover { background: #022c22; border-color: #10b981; color: #34d399; }
