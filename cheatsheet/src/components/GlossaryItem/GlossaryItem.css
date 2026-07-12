@@ -9,9 +9,17 @@
 
 .glossary-item__header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  justify-content: space-between;
   gap: 10px;
   margin-bottom: 6px;
+}
+
+.glossary-item__header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .glossary-item__term {
