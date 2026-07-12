@@ -4,10 +4,12 @@ import { ThemeToggle } from '../../components/ThemeToggle/ThemeToggle';
 import '../derivatives-forex/layout.css';
 
 const NAV_LINKS = [
-  { to: '/derivatives-forex', label: 'D&FX Cheatsheet' },
+  { to: '/derivatives-forex', label: 'D&FX' },
   { to: '/fx-options', label: 'FX & Options' },
-  { to: '/backend', label: 'Backend Engineering', end: true },
+  { to: '/backend', label: 'Backend', end: true },
+  { to: '/frontend', label: 'Frontend' },
   { to: '/claude-code', label: 'Claude Code' },
+  { to: '/progress', label: '📊 Progress' },
 ];
 
 export default function BackendLayout() {

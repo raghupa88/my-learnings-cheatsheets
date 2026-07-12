@@ -1,3 +1,4 @@
+import { TopicCheckbox } from '../../components/TopicCheckbox/TopicCheckbox';
 import './BackendPage.css';
 
 /* ── Section anchor nav ─────────────────────────────────────────────────── */
@@ -10,6 +11,7 @@ const SECTIONS = [
   { id: 'kafka',          label: 'Kafka + Zookeeper',icon: '📨' },
   { id: 'docker',         label: 'Docker',           icon: '🐳' },
   { id: 'openshift',      label: 'OpenShift / K8s',  icon: '🚀' },
+  { id: 'kibana',         label: 'Kibana / ELK',     icon: '🔎' },
 ];
 
 /* ── Reusable code renderer ─────────────────────────────────────────────── */
@@ -1013,6 +1015,7 @@ export default function BackendPage() {
                 <span className="be-topic__icon">{t.icon}</span>
                 <h3 className="be-topic__title">{t.title}</h3>
                 <span className={`be-topic__level be-topic__level--${t.level}`}>{t.level}</span>
+                <TopicCheckbox topicKey={`backend/java21/${t.title}`} />
               </div>
               <div className="be-topic__body">
                 <p className="be-topic__desc">{t.desc}</p>
@@ -1047,6 +1050,7 @@ export default function BackendPage() {
                 <span className="be-topic__icon">{t.icon}</span>
                 <h3 className="be-topic__title">{t.title}</h3>
                 <span className={`be-topic__level be-topic__level--${t.level}`}>{t.level}</span>
+                <TopicCheckbox topicKey={`backend/springboot/${t.title}`} />
               </div>
               <div className="be-topic__body">
                 <p className="be-topic__desc">{t.desc}</p>
@@ -1096,6 +1100,7 @@ export default function BackendPage() {
                 <span className="be-topic__icon">{t.icon}</span>
                 <h3 className="be-topic__title">{t.title}</h3>
                 <span className={`be-topic__level be-topic__level--${t.level}`}>{t.level}</span>
+                <TopicCheckbox topicKey={`backend/rest/${t.title}`} />
               </div>
               <div className="be-topic__body">
                 <p className="be-topic__desc">{t.desc}</p>
@@ -1143,6 +1148,7 @@ export default function BackendPage() {
                 <span className="be-topic__icon">{t.icon}</span>
                 <h3 className="be-topic__title">{t.title}</h3>
                 <span className={`be-topic__level be-topic__level--${t.level}`}>{t.level}</span>
+                <TopicCheckbox topicKey={`backend/websocket/${t.title}`} />
               </div>
               <div className="be-topic__body">
                 <p className="be-topic__desc">{t.desc}</p>
@@ -1226,6 +1232,7 @@ export default function BackendPage() {
                 <span className="be-topic__icon">{t.icon}</span>
                 <h3 className="be-topic__title">{t.title}</h3>
                 <span className={`be-topic__level be-topic__level--${t.level}`}>{t.level}</span>
+                <TopicCheckbox topicKey={`backend/kafka/${t.title}`} />
               </div>
               <div className="be-topic__body">
                 <p className="be-topic__desc">{t.desc}</p>
@@ -1294,6 +1301,7 @@ export default function BackendPage() {
                 <span className="be-topic__icon">{t.icon}</span>
                 <h3 className="be-topic__title">{t.title}</h3>
                 <span className={`be-topic__level be-topic__level--${t.level}`}>{t.level}</span>
+                <TopicCheckbox topicKey={`backend/docker/${t.title}`} />
               </div>
               <div className="be-topic__body">
                 <p className="be-topic__desc">{t.desc}</p>
@@ -1349,6 +1357,7 @@ export default function BackendPage() {
                 <span className="be-topic__icon">{t.icon}</span>
                 <h3 className="be-topic__title">{t.title}</h3>
                 <span className={`be-topic__level be-topic__level--${t.level}`}>{t.level}</span>
+                <TopicCheckbox topicKey={`backend/openshift/${t.title}`} />
               </div>
               <div className="be-topic__body">
                 <p className="be-topic__desc">{t.desc}</p>
@@ -1380,6 +1389,169 @@ export default function BackendPage() {
               <li>PodDisruptionBudget for zero-downtime deploys</li>
             </ul>
           </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════════════
+          09 KIBANA / ELK STACK
+          ════════════════════════════════════════════════════════════════════ */}
+      <section className="be-section" id="kibana">
+        <div className="be-section__header">
+          <span className="be-section__num">09</span>
+          <span className="be-section__icon">🔎</span>
+          <h2 className="be-section__title">Kibana / ELK Stack</h2>
+        </div>
+
+        <div className="be-callout">
+          <span className="be-callout__icon">💡</span>
+          ELK = Elasticsearch (search engine + storage) + Logstash (ingest pipeline) + Kibana (UI).
+          Modern stacks replace Logstash with Filebeat/Fluentd. Spring Boot apps ship logs as JSON
+          (Logback + logstash-logback-encoder); each log line includes traceId + spanId for
+          cross-service correlation with Micrometer Tracing.
+        </div>
+
+        <div className="be-compare">
+          <div className="be-compare__col">
+            <div className="be-compare__head be-compare__head--a">ELK Stack flow</div>
+            <ul className="be-compare__list">
+              <li>App emits JSON logs → stdout</li>
+              <li>Filebeat/Fluentd tails container logs</li>
+              <li>Ships to Logstash or directly to Elasticsearch</li>
+              <li>Kibana queries Elasticsearch via KQL/Lucene</li>
+              <li>Dashboards aggregate over time buckets</li>
+            </ul>
+          </div>
+          <div className="be-compare__col">
+            <div className="be-compare__head be-compare__head--b">Lucene vs KQL</div>
+            <ul className="be-compare__list">
+              <li>KQL: simpler, no escaping — <code>status: "ERROR"</code></li>
+              <li>Lucene: more powerful — ranges, wildcards, boosts</li>
+              <li>KQL default in Kibana 7.3+</li>
+              <li>Lucene needed for regex: <code>/error.*/</code></li>
+              <li>Switch via toggle in Kibana search bar</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="be-topics">
+          {[
+            {
+              icon: '🔍', title: 'KQL Syntax Essentials', level: 'beginner' as const,
+              desc: 'KQL (Kibana Query Language) is the default. Field:value pairs, wildcards, ranges, AND/OR/NOT. Always quote string values with special characters.',
+              code: `# Basic field match
+level: "ERROR"
+service.name: "fxo-backend"
+
+# Wildcard
+message: *trade* AND level: "WARN"
+
+# NOT
+NOT level: "DEBUG"
+
+# Range (numeric / date)
+response_time_ms >= 500
+@timestamp >= "2025-03-15T09:00:00" and @timestamp < "2025-03-15T10:00:00"
+
+# Nested field
+http.response.status_code: 500
+
+# Exists check
+traceId: *
+
+# Combine
+service.name: "fxo-backend" AND level: "ERROR" AND NOT message: *health*`,
+            },
+            {
+              icon: '🔗', title: 'Log Correlation (traceId)', level: 'intermediate' as const,
+              desc: 'Micrometer Tracing (Zipkin/OTLP) injects traceId and spanId into the MDC (Mapped Diagnostic Context). Logstash-logback-encoder serialises them as JSON fields. One KQL query finds all logs across all services for a single request.',
+              code: [
+                '# pom.xml dependency',
+                '<dependency>',
+                '  <groupId>net.logstash.logback</groupId>',
+                '  <artifactId>logstash-logback-encoder</artifactId>',
+                '</dependency>',
+                '',
+                '# application.yml',
+                'logging:',
+                '  pattern.level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"',
+                '',
+                '# Resulting log line (JSON)',
+                '{',
+                '  "@timestamp": "2025-03-15T09:23:11.452Z",',
+                '  "level": "ERROR",',
+                '  "service": "fxo-backend",',
+                '  "traceId": "4bf92f3577b34da6a3ce929d0e0e4736",',
+                '  "spanId": "00f067aa0ba902b7",',
+                '  "message": "Trade booking failed: limit exceeded"',
+                '}',
+                '',
+                '# KQL to find ALL services involved in one request',
+                'traceId: "4bf92f3577b34da6a3ce929d0e0e4736"',
+              ].join('\n'),
+            },
+            {
+              icon: '📊', title: 'Discover Tab & Dashboard', level: 'beginner' as const,
+              desc: 'Discover is the log explorer. Save searches, pin fields, and share links. Dashboards are built in Lens — drag fields onto the canvas; aggregations (count, avg, percentile) become chart axes.',
+              code: `# Workflow: investigate a production error
+1. Open Discover, set time range to "Last 1 hour"
+2. KQL: service.name: "fxo-backend" AND level: "ERROR"
+3. Expand a log row → copy traceId
+4. New query: traceId: "<copied-id>"  ← see all services
+5. Sort by @timestamp asc → reconstruct request flow
+
+# Useful field columns to add in Discover
+@timestamp | level | service.name | traceId | message | http.response.status_code
+
+# Dashboard — Lens aggregations
+- Count of errors per service (bar chart, split by service.name)
+- P95 response time over time (line chart, percentile agg on response_time_ms)
+- Error rate % (formula: count(level:"ERROR") / count() * 100)
+- Top 10 slow endpoints (table, terms agg on url.path, avg response_time_ms)`,
+            },
+            {
+              icon: '🚨', title: 'Alerting Rules', level: 'intermediate' as const,
+              desc: 'Kibana alerting fires when a threshold query triggers. Error-rate alerts and SLA latency alerts belong in Kibana. Pair with PagerDuty/Slack connectors for on-call notifications.',
+              code: `# Kibana Stack Alerts (Management → Stack Management → Rules)
+
+# Example: error spike alert
+Rule type: Elasticsearch query
+Query: level: "ERROR" AND service.name: "fxo-backend"
+Threshold: count > 50 in last 5m
+Action: Slack webhook → #fxo-alerts channel
+
+# Example: P95 latency SLA breach
+Rule type: Metric threshold
+Metric: 95th percentile of response_time_ms
+Threshold: > 2000ms  over last 10m
+Action: PagerDuty incident
+
+# Watcher (advanced — JSON DSL)
+PUT _watcher/watch/high-error-rate
+{
+  "trigger": { "schedule": { "interval": "5m" } },
+  "input": { "search": { "request": {
+    "indices": ["logs-*"],
+    "body": { "query": { "match": { "level": "ERROR" } },
+              "aggs": { "count": { "value_count": { "field": "_id" } } } }
+  }}},
+  "condition": { "compare": { "ctx.payload.aggregations.count.value": { "gt": 100 } } },
+  "actions": { "send_email": { ... } }
+}`,
+            },
+          ].map(t => (
+            <div key={t.title} className="be-topic">
+              <div className="be-topic__head">
+                <span className="be-topic__icon">{t.icon}</span>
+                <h3 className="be-topic__title">{t.title}</h3>
+                <span className={`be-topic__level be-topic__level--${t.level}`}>{t.level}</span>
+                <TopicCheckbox topicKey={`backend/kibana/${t.title}`} />
+              </div>
+              <div className="be-topic__body">
+                <p className="be-topic__desc">{t.desc}</p>
+                <Code lang="KQL / YAML / JSON">{t.code}</Code>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
