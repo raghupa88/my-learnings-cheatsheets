@@ -51,7 +51,7 @@ export default function ForexPage() {
       ) : (
         <div className="page__grid">
           {displayed.map(concept => (
-            <ConceptCard key={concept.id} concept={concept} />
+            <ConceptCard key={concept.id} concept={concept} routePrefix="forex" />
           ))}
         </div>
       )}

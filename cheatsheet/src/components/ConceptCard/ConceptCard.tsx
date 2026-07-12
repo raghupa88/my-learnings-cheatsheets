@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { Concept } from '../../types';
 import { FormulaBlock } from '../FormulaBlock/FormulaBlock';
 import { PayoffChart } from '../PayoffChart/PayoffChart';
+import { TopicCheckbox } from '../TopicCheckbox/TopicCheckbox';
 import './ConceptCard.css';
 
 interface ConceptCardProps {
   concept: Concept;
+  routePrefix: string; // e.g. "derivatives" | "forex"
 }
 
-export function ConceptCard({ concept }: ConceptCardProps) {
+export function ConceptCard({ concept, routePrefix }: ConceptCardProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -16,6 +18,7 @@ export function ConceptCard({ concept }: ConceptCardProps) {
       <header className="concept-card__header">
         <div className="concept-card__meta">
           <span className="concept-card__category">{concept.category}</span>
+          <TopicCheckbox topicKey={`${routePrefix}/${concept.id}`} />
         </div>
         <h3 className="concept-card__title">{concept.title}</h3>
       </header>

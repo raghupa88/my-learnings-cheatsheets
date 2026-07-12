@@ -4,6 +4,7 @@ import {
   ReferenceLine, ReferenceArea, ResponsiveContainer, Legend,
 } from 'recharts';
 import { FormulaBlock } from '../../components/FormulaBlock/FormulaBlock';
+import { TopicCheckbox } from '../../components/TopicCheckbox/TopicCheckbox';
 import './FxOptionsPage.css';
 
 /* ─── Tooltip helper types ───────────────────────────────────────────────── */
@@ -868,10 +869,11 @@ export default function FxOptionsPage() {
             <div key={g.name} className="fxo-greek-card">
               <div className="fxo-greek-card__header">
                 <div className="fxo-greek-card__symbol">{g.symbol}</div>
-                <div>
+                <div style={{ flex: 1 }}>
                   <div className="fxo-greek-card__name">{g.name}</div>
                   <div className="fxo-greek-card__plain">{g.plain}</div>
                 </div>
+                <TopicCheckbox topicKey={`fxo/greeks/${g.name}`} />
               </div>
               <div className="fxo-greek-card__body">
                 <p className="fxo-greek-card__description">{g.description}</p>
@@ -1000,10 +1002,11 @@ export default function FxOptionsPage() {
             <div key={t.name} className="fxo-term">
               <div className="fxo-term__header">
                 <div className="fxo-term__icon">{t.icon}</div>
-                <div>
+                <div style={{ flex: 1 }}>
                   <div className="fxo-term__name">{t.name}</div>
                   <div className="fxo-term__abbr">{t.abbr}</div>
                 </div>
+                <TopicCheckbox topicKey={`fxo/key-terms/${t.name}`} />
               </div>
               <p className="fxo-term__definition">{t.definition}</p>
               <div className="fxo-term__example">{t.example}</div>
@@ -1026,7 +1029,10 @@ export default function FxOptionsPage() {
         <div className="fxo-systems">
           {SYSTEMS.map(s => (
             <div key={s.name} className="fxo-system-card">
-              <span className="fxo-system-card__icon">{s.icon}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <span className="fxo-system-card__icon">{s.icon}</span>
+                <TopicCheckbox topicKey={`fxo/systems/${s.name}`} />
+              </div>
               <div className="fxo-system-card__name">{s.name}</div>
               <p className="fxo-system-card__desc">{s.desc}</p>
               <div className="fxo-system-card__tools">
@@ -1148,6 +1154,7 @@ export default function FxOptionsPage() {
                   <div className="fxo-greek-card__name" style={{ color: s.color }}>{s.name}</div>
                   <div className="fxo-greek-card__plain">{s.when}</div>
                 </div>
+                <TopicCheckbox topicKey={`fxo/strategies/${s.name}`} />
                 <div style={{
                   fontSize: '0.7rem',
                   fontWeight: 700,
