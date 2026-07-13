@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useProgressStore, clearAllProgress, formatCheckedDate } from '../../hooks/useProgress';
+import { ReviewQueue } from '../../components/ReviewQueue/ReviewQueue';
 import './ProgressPage.css';
 
 /* ── Known topic registry ────────────────────────────────────────────────── */
@@ -264,6 +265,10 @@ export default function ProgressPage() {
           <div className="pg-stat__label">Overall Started</div>
         </div>
       </div>
+
+      {/* Review queue */}
+      <div className="pg-routes__title" style={{ marginBottom: '12px' }}>Review Queue</div>
+      <ReviewQueue />
 
       {/* Per-route progress bars */}
       <div className="pg-routes">

@@ -3,6 +3,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import { ThemeToggle } from '../../components/ThemeToggle/ThemeToggle';
 import { CommandPalette } from '../../components/CommandPalette/CommandPalette';
+import { useReviewQueue } from '../../hooks/useReviewQueue';
 import './layout.css';
 
 const NAV_LINKS = [
@@ -21,6 +22,7 @@ export default function DerivativesForexLayout() {
   const [theme, toggleTheme] = useTheme();
   const location = useLocation();
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const { due } = useReviewQueue();
 
   const openPalette = useCallback(() => setPaletteOpen(true), []);
   const closePalette = useCallback(() => setPaletteOpen(false), []);
@@ -57,6 +59,9 @@ export default function DerivativesForexLayout() {
                   }
                 >
                   {label}
+                  {to === '/progress' && due.length > 0 && (
+                    <span className="layout__due-badge">{due.length}</span>
+                  )}
                 </NavLink>
               </li>
             ))}
