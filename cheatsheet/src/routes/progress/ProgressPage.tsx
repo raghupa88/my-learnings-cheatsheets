@@ -4,9 +4,6 @@ import { useProgressStore, clearAllProgress, formatCheckedDate } from '../../hoo
 import './ProgressPage.css';
 
 /* ── Known topic registry ────────────────────────────────────────────────── */
-// Keys must match what each page passes to TopicCheckbox as topicKey.
-// Format: "<route>/<sectionId>/<topicTitle>"
-
 const ROUTE_TOPICS: Array<{
   route: string;
   label: string;
@@ -200,9 +197,11 @@ function shortTitle(key: string): string {
   return parts[parts.length - 1];
 }
 function routeLabel(key: string): string {
-  const parts = key.split('/');
-  return parts[0] ?? '';
+  return key.split('/')[0] ?? '';
 }
+
+const CONF_LABEL = ['Not started', 'Seen it', 'Understand', 'Can explain'];
+const CONF_CLASS = ['', 'pg-conf--1', 'pg-conf--2', 'pg-conf--3'];
 
 /* ═══════════════════════════════════════════════════════════════════════════
    PAGE
@@ -211,23 +210,23 @@ export default function ProgressPage() {
   const store = useProgressStore();
   const [confirmReset, setConfirmReset] = useState(false);
 
-  // Aggregate stats
   const allTopics = ROUTE_TOPICS.flatMap(r => r.topics);
-  const checkedKeys = allTopics.filter(k => store[k]?.checked);
+
+  const seen       = allTopics.filter(k => (store[k]?.confidence ?? 0) >= 1);
+  const understood = allTopics.filter(k => (store[k]?.confidence ?? 0) >= 2);
+  const mastered   = allTopics.filter(k => (store[k]?.confidence ?? 0) === 3);
+  const pending    = allTopics.filter(k => (store[k]?.confidence ?? 0) === 0);
+
   const totalTopics = allTopics.length;
-  const totalChecked = checkedKeys.length;
-  const pct = totalTopics === 0 ? 0 : Math.round((totalChecked / totalTopics) * 100);
+  const pct = totalTopics === 0 ? 0 : Math.round((seen.length / totalTopics) * 100);
 
-  // Pending (unchecked)
-  const pending = allTopics.filter(k => !store[k]?.checked);
-
-  // Done — sorted newest first
-  const done = checkedKeys
-    .map(k => ({ key: k, checkedAt: store[k]?.checkedAt ?? null }))
+  // Reviewed items sorted newest first
+  const reviewed = seen
+    .map(k => ({ key: k, updatedAt: store[k]?.updatedAt ?? null, confidence: store[k]?.confidence ?? 1 }))
     .sort((a, b) => {
-      if (!a.checkedAt) return 1;
-      if (!b.checkedAt) return -1;
-      return b.checkedAt.localeCompare(a.checkedAt);
+      if (!a.updatedAt) return 1;
+      if (!b.updatedAt) return -1;
+      return b.updatedAt.localeCompare(a.updatedAt);
     });
 
   const handleReset = () => {
@@ -242,23 +241,27 @@ export default function ProgressPage() {
       <div className="pg-hero">
         <h1 className="pg-hero__title">Learning Progress</h1>
         <p className="pg-hero__sub">
-          All data is stored locally in your browser. Check topics off as you review them.
+          All data is stored locally in your browser. Click any topic badge to cycle: Seen → Understand → Can explain → reset.
         </p>
       </div>
 
       {/* Stat tiles */}
       <div className="pg-stats">
         <div className="pg-stat">
-          <div className="pg-stat__num pg-stat__num--green">{totalChecked}</div>
-          <div className="pg-stat__label">Topics Reviewed</div>
+          <div className="pg-stat__num pg-stat__num--amber">{seen.length}</div>
+          <div className="pg-stat__label">Seen (≥1)</div>
         </div>
         <div className="pg-stat">
-          <div className="pg-stat__num pg-stat__num--blue">{totalTopics - totalChecked}</div>
-          <div className="pg-stat__label">Topics Pending</div>
+          <div className="pg-stat__num pg-stat__num--blue">{understood.length}</div>
+          <div className="pg-stat__label">Understand (≥2)</div>
+        </div>
+        <div className="pg-stat">
+          <div className="pg-stat__num pg-stat__num--green">{mastered.length}</div>
+          <div className="pg-stat__label">Can explain (3)</div>
         </div>
         <div className="pg-stat">
           <div className="pg-stat__num pg-stat__num--purple">{pct}%</div>
-          <div className="pg-stat__label">Overall Complete</div>
+          <div className="pg-stat__label">Overall Started</div>
         </div>
       </div>
 
@@ -266,24 +269,33 @@ export default function ProgressPage() {
       <div className="pg-routes">
         <div className="pg-routes__title">Progress by Route</div>
         {ROUTE_TOPICS.map(r => {
-          const checked = r.topics.filter(k => store[k]?.checked).length;
-          const total   = r.topics.length;
-          const pctR    = total === 0 ? 0 : Math.round((checked / total) * 100);
+          const s1 = r.topics.filter(k => (store[k]?.confidence ?? 0) === 1).length;
+          const s2 = r.topics.filter(k => (store[k]?.confidence ?? 0) === 2).length;
+          const s3 = r.topics.filter(k => (store[k]?.confidence ?? 0) === 3).length;
+          const total = r.topics.length;
+          const pct1 = total === 0 ? 0 : (s1 / total) * 100;
+          const pct2 = total === 0 ? 0 : (s2 / total) * 100;
+          const pct3 = total === 0 ? 0 : (s3 / total) * 100;
+          const started = s1 + s2 + s3;
           return (
             <div key={r.route} className="pg-route-row">
               <div className="pg-route-row__name">
                 {r.icon} <Link to={r.path}>{r.label}</Link>
               </div>
               <div className="pg-bar-track">
-                <div
-                  className={`pg-bar-fill${pctR === 0 ? ' pg-bar-fill--empty' : ''}`}
-                  style={{ width: `${pctR}%` }}
-                />
+                <div className="pg-bar-fill pg-bar-fill--amber" style={{ width: `${pct1}%` }} />
+                <div className="pg-bar-fill pg-bar-fill--blue"  style={{ width: `${pct2}%` }} />
+                <div className="pg-bar-fill pg-bar-fill--green" style={{ width: `${pct3}%` }} />
               </div>
-              <div className="pg-route-row__pct">{checked}/{total}</div>
+              <div className="pg-route-row__pct">{started}/{total}</div>
             </div>
           );
         })}
+        <div className="pg-bar-legend">
+          <span className="pg-bar-legend__item pg-bar-legend__item--amber">◐ Seen</span>
+          <span className="pg-bar-legend__item pg-bar-legend__item--blue">◕ Understand</span>
+          <span className="pg-bar-legend__item pg-bar-legend__item--green">✓ Can explain</span>
+        </div>
       </div>
 
       {/* Pending / Reviewed panels */}
@@ -292,10 +304,10 @@ export default function ProgressPage() {
         {/* Pending */}
         <div className="pg-panel">
           <div className="pg-panel__head pg-panel__head--pending">
-            ⏳ Pending ({pending.length})
+            ⏳ Not started ({pending.length})
           </div>
           {pending.length === 0 ? (
-            <div className="pg-panel__empty">🎉 All topics reviewed!</div>
+            <div className="pg-panel__empty">🎉 All topics started!</div>
           ) : (
             <ul className="pg-panel__list">
               {pending.map(k => {
@@ -316,21 +328,23 @@ export default function ProgressPage() {
         {/* Reviewed */}
         <div className="pg-panel">
           <div className="pg-panel__head pg-panel__head--done">
-            ✅ Reviewed ({done.length})
+            ✅ In progress ({reviewed.length})
           </div>
-          {done.length === 0 ? (
-            <div className="pg-panel__empty">No topics reviewed yet. Start checking them off!</div>
+          {reviewed.length === 0 ? (
+            <div className="pg-panel__empty">No topics started yet. Click any topic badge to begin!</div>
           ) : (
             <ul className="pg-panel__list">
-              {done.map(({ key: k, checkedAt }) => {
+              {reviewed.map(({ key: k, updatedAt, confidence }) => {
                 const rt = ROUTE_TOPICS.find(r => r.topics.includes(k));
                 return (
                   <li key={k} className="pg-panel__item">
                     <span className="pg-panel__item-name">
                       {rt ? <Link to={rt.path}>{shortTitle(k)}</Link> : shortTitle(k)}
                     </span>
-                    <span className="pg-panel__item-route">{routeLabel(k)}</span>
-                    <span className="pg-panel__item-date">{formatCheckedDate(checkedAt)}</span>
+                    <span className={`pg-conf ${CONF_CLASS[confidence]}`}>
+                      {CONF_LABEL[confidence]}
+                    </span>
+                    <span className="pg-panel__item-date">{formatCheckedDate(updatedAt)}</span>
                   </li>
                 );
               })}

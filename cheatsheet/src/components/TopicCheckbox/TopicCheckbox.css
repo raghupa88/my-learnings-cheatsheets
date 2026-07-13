@@ -9,35 +9,83 @@
   border-radius: 999px;
   border: 1.5px solid var(--color-border, #e5e7eb);
   background: var(--color-surface, #fff);
-  color: var(--color-muted, #9ca3af);
+  color: var(--color-text-muted, #9ca3af);
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
   white-space: nowrap;
   flex-shrink: 0;
 }
-.tc-btn:hover {
-  border-color: #10b981;
-  color: #059669;
-  background: #f0fdf4;
+
+/* ── State 0: not started (default) ── */
+.tc-btn--0 {
+  background: var(--color-surface, #fff);
+  border-color: var(--color-border, #e5e7eb);
+  color: var(--color-text-dim, #9ca3af);
 }
-.tc-btn--checked {
+.tc-btn--0:hover {
+  border-color: #f59e0b;
+  color: #d97706;
+  background: #fffbeb;
+}
+
+/* ── State 1: seen (amber) ── */
+.tc-btn--1 {
+  background: #fffbeb;
+  border-color: #fbbf24;
+  color: #92400e;
+}
+.tc-btn--1:hover {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #78350f;
+}
+
+/* ── State 2: understand (blue) ── */
+.tc-btn--2 {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1e40af;
+}
+.tc-btn--2:hover {
+  background: #dbeafe;
+  border-color: #2563eb;
+  color: #1d4ed8;
+}
+
+/* ── State 3: can explain (green) ── */
+.tc-btn--3 {
   background: #d1fae5;
   border-color: #10b981;
   color: #065f46;
 }
-.tc-btn--checked:hover {
+.tc-btn--3:hover {
   background: #fee2e2;
   border-color: #ef4444;
   color: #991b1b;
 }
-.tc-btn__icon { font-size: 0.75rem; }
-.tc-btn__icon--empty { color: var(--color-border, #d1d5db); }
 
+.tc-btn__icon { font-size: 0.75rem; }
+
+/* ── Dark mode ── */
 @media (prefers-color-scheme: dark) {
-  .tc-btn--checked { background: #064e3b; border-color: #059669; color: #6ee7b7; }
-  .tc-btn--checked:hover { background: #450a0a; border-color: #ef4444; color: #fca5a5; }
-  .tc-btn:hover { background: #022c22; border-color: #10b981; color: #34d399; }
+  .tc-btn--0 { background: var(--color-surface); border-color: var(--color-border); color: var(--color-text-dim); }
+  .tc-btn--0:hover { background: #2d2408; border-color: #f59e0b; color: #fbbf24; }
+  .tc-btn--1 { background: #2d2408; border-color: #f59e0b; color: #fcd34d; }
+  .tc-btn--1:hover { background: #3d2e0a; border-color: #fbbf24; color: #fde68a; }
+  .tc-btn--2 { background: #1e2a4a; border-color: #3b82f6; color: #93c5fd; }
+  .tc-btn--2:hover { background: #1e3a6e; border-color: #60a5fa; color: #bfdbfe; }
+  .tc-btn--3 { background: #064e3b; border-color: #059669; color: #6ee7b7; }
+  .tc-btn--3:hover { background: #450a0a; border-color: #ef4444; color: #fca5a5; }
 }
-:root[data-theme="dark"] .tc-btn--checked { background: #064e3b; border-color: #059669; color: #6ee7b7; }
-:root[data-theme="dark"] .tc-btn--checked:hover { background: #450a0a; border-color: #ef4444; color: #fca5a5; }
-:root[data-theme="dark"] .tc-btn:hover { background: #022c22; border-color: #10b981; color: #34d399; }
+:root[data-theme="dark"] .tc-btn--0 { background: var(--color-surface); border-color: var(--color-border); color: var(--color-text-dim); }
+:root[data-theme="dark"] .tc-btn--0:hover { background: #2d2408; border-color: #f59e0b; color: #fbbf24; }
+:root[data-theme="dark"] .tc-btn--1 { background: #2d2408; border-color: #f59e0b; color: #fcd34d; }
+:root[data-theme="dark"] .tc-btn--1:hover { background: #3d2e0a; border-color: #fbbf24; color: #fde68a; }
+:root[data-theme="dark"] .tc-btn--2 { background: #1e2a4a; border-color: #3b82f6; color: #93c5fd; }
+:root[data-theme="dark"] .tc-btn--2:hover { background: #1e3a6e; border-color: #60a5fa; color: #bfdbfe; }
+:root[data-theme="dark"] .tc-btn--3 { background: #064e3b; border-color: #059669; color: #6ee7b7; }
+:root[data-theme="dark"] .tc-btn--3:hover { background: #450a0a; border-color: #ef4444; color: #fca5a5; }
+:root[data-theme="light"] .tc-btn--0 { background: var(--color-surface); border-color: var(--color-border); color: var(--color-text-dim); }
+:root[data-theme="light"] .tc-btn--1 { background: #fffbeb; border-color: #fbbf24; color: #92400e; }
+:root[data-theme="light"] .tc-btn--2 { background: #eff6ff; border-color: #3b82f6; color: #1e40af; }
+:root[data-theme="light"] .tc-btn--3 { background: #d1fae5; border-color: #10b981; color: #065f46; }
