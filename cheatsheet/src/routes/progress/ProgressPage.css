@@ -27,7 +27,7 @@
 /* Stat tiles */
 .pg-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin-bottom: 2.5rem;
 }
@@ -47,6 +47,7 @@
 }
 .pg-stat__num--green  { color: #059669; }
 .pg-stat__num--blue   { color: #3b82f6; }
+.pg-stat__num--amber  { color: #d97706; }
 .pg-stat__num--purple { color: #7c3aed; }
 .pg-stat__label {
   font-size: 0.78rem;
@@ -90,14 +91,51 @@
   background: var(--color-border, #e5e7eb);
   border-radius: 999px;
   overflow: hidden;
+  display: flex;
 }
 .pg-bar-fill {
   height: 100%;
-  border-radius: 999px;
-  background: #10b981;
   transition: width 0.4s ease;
 }
+.pg-bar-fill--amber { background: #f59e0b; }
+.pg-bar-fill--blue  { background: #3b82f6; }
+.pg-bar-fill--green { background: #10b981; }
 .pg-bar-fill--empty { background: var(--color-border, #e5e7eb); }
+
+.pg-bar-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+}
+.pg-bar-legend__item {
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.pg-bar-legend__item--amber { color: #d97706; }
+.pg-bar-legend__item--blue  { color: #3b82f6; }
+.pg-bar-legend__item--green { color: #059669; }
+
+/* Confidence badge in reviewed list */
+.pg-conf {
+  font-size: 0.67rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.pg-conf--1 { background: #fef3c7; color: #92400e; }
+.pg-conf--2 { background: #dbeafe; color: #1e40af; }
+.pg-conf--3 { background: #d1fae5; color: #065f46; }
+
+@media (prefers-color-scheme: dark) {
+  .pg-conf--1 { background: #2d2408; color: #fcd34d; }
+  .pg-conf--2 { background: #1e2a4a; color: #93c5fd; }
+  .pg-conf--3 { background: #064e3b; color: #6ee7b7; }
+}
+:root[data-theme="dark"] .pg-conf--1 { background: #2d2408; color: #fcd34d; }
+:root[data-theme="dark"] .pg-conf--2 { background: #1e2a4a; color: #93c5fd; }
+:root[data-theme="dark"] .pg-conf--3 { background: #064e3b; color: #6ee7b7; }
 .pg-route-row__pct {
   font-size: 0.78rem;
   font-weight: 700;
